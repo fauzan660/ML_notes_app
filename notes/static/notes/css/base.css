@@ -1,0 +1,47 @@
+@font-face {
+    font-family: sans-latin;
+    src: url(../fonts/canva-sans-latin-ext.ttf);
+}
+
+ body {
+     font-family: 'Inter', sans-serif;
+     background-color: #f8f9fa;
+ }
+
+ .navbar-brand {
+     font-weight: 600;
+     font-size: 1.5rem;
+ }
+ .navbar-brand span{
+    color: #54616c;
+ }
+
+ .hero {
+     background: linear-gradient(135deg, #eef2f3 0%, #ffffff 100%);
+     padding: 100px 0;
+     text-align: center;
+ }
+
+ .hero h1 {
+     font-size: 3rem;
+     font-weight: 600;
+     color: #333;
+     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+ }
+
+ .hero p {
+     color: #555;
+     font-size: 1.2rem;
+ }
+
+ .btn-primary {
+     background-color: #5c6bc0;
+     border: none;
+     padding: 12px 24px;
+     font-weight: 500;
+     font-size: 1rem;
+ }
+
+ .btn-primary:hover {
+     background-color: #3f51b5;
+ }

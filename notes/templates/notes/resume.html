@@ -1,0 +1,46 @@
+{% extends "./base.html" %}
+{% load static %}
+
+{% block title %}Resume Enhancer{% endblock %}
+
+{% block heading %}
+<h1>Add Your Resume</h1>
+{% endblock %}
+
+{% block content %}
+<div class="resume-form">
+
+    <section class="hero">
+        <div class="container">
+            <h1>Upload. Store. Share.</h1>
+            <p>Your all-in-one resume management dashboard</p>
+            <div class="text-center">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#uploadForm"
+                    aria-expanded="false" aria-controls="uploadForm">
+                    Upload Your Resume
+                </button>
+            </div>
+        </div>
+    </section>
+<!-- Button to Show Form -->
+
+
+<!-- Collapsible Form -->
+<div class="collapse mt-4" id="uploadForm">
+    <div class="card card-body shadow-sm">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="resume" class="form-label">Select Resume (PDF, DOCX):</label>
+                <input type="file" class="form-control" id="resume" name="resume" required>
+            </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Your Full Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}
