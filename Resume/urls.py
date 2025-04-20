@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from notes.views import members
 from django.urls import path
+from job.views import upload_job
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('members/', members)
+    path('members/', members),
+    path('job/', upload_job)
 ]
