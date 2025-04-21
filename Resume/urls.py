@@ -21,6 +21,6 @@ from job.views import upload_job
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('members/', upload_file)
+    path('members/', upload_file),
     path('job/', upload_job)
 ]
