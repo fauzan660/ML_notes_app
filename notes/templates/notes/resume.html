@@ -24,21 +24,13 @@
     </section>
 <!-- Button to Show Form -->
 
-
 <!-- Collapsible Form -->
 <div class="collapse mt-4" id="uploadForm">
     <div class="card card-body shadow-sm">
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="mb-3">
-                <label for="resume" class="form-label">Select Resume (PDF, DOCX):</label>
-                <input type="file" class="form-control" id="resume" name="resume" required>
-            </div>
-            <div class="mb-3">
-                <label for="name" class="form-label">Your Full Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <button type="submit" class="btn btn-success">Submit</button>
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
         </form>
     </div>
 </div>
