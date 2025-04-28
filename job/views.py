@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import UploadJobForm
 from .models import PostJobModel
-from notes.views import members
+from notes.views import upload_file
 # Create your views here.
 
 def upload_job(request):
@@ -11,7 +11,7 @@ def upload_job(request):
             instance = PostJobModel(job_title = form.cleaned_data['title'], job_description= form.cleaned_data['description'], job_type=form.cleaned_data['type'])
             instance.save()
             print("hello")
-            return redirect(members)
+            return redirect(upload_file)
 
         else:
             print(form.errors)

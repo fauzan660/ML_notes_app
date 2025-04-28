@@ -1,6 +1,7 @@
 from pypdf import PdfReader
 from io import StringIO
 from pdfminer.high_level import extract_text, extract_text_to_fp
+from .preprocessing import preprocess_text
 
 def read_pdf(pdf_file):
 # creating a pdf reader object
@@ -17,4 +18,4 @@ def read_pdf(pdf_file):
     # print(text)
     output_string = StringIO()
     extract_text_to_fp(pdf_file, output_string)
-    print(output_string.getvalue().strip())
+    print(preprocess_text(output_string.getvalue().strip()))

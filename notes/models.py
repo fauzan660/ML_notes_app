@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 JOB_TYPE_CHOICES = [
     ("FT", "Full Time"),
@@ -10,7 +10,9 @@ JOB_TYPE_CHOICES = [
 
 # Create your models here.
 class UploadedFiles(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     file_field = models.FileField(upload_to='resumes/')
+    extracted_text = models.TextField(blank=True, null=True)
     
     
 class PostJobModel(models.Model):
