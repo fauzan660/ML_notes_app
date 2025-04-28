@@ -1,0 +1,33 @@
+
+{% extends './base.html'%}
+<!-- product_detail.html -->
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>{{ job.job_title }} - Details</title>
+</head>
+
+<body>
+    {% block content %}
+    <h1>{{ job.job_title }}</h1>
+    <p>Price: {{ job.job_description }}</p>
+    <p>{{ job.job_type }}</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="resumeFileInput" class="form-label">Upload Resumes</label>
+            <input class="form-control" type="file" id="resumeFileInput" name="resume_file" multiple>
+            <div class="form-text">
+                You can select multiple files at once.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    {%endblock %}
+    <!-- Add buttons/actions -->
+</body>
+
+</html>

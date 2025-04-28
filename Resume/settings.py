@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'notes',
     'authentication',
     'job',
+    'home',
 ]
 
 MIDDLEWARE = [
