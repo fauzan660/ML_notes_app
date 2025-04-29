@@ -18,4 +18,4 @@ def read_pdf(pdf_file):
     # print(text)
     output_string = StringIO()
     extract_text_to_fp(pdf_file, output_string)
-    print(preprocess_text(output_string.getvalue().strip()))
+    return (preprocess_text(output_string.getvalue().strip()))

@@ -31,9 +31,6 @@ def remove_html(sent):
     text_without_html_tags = re.sub(html_tags_pattern, '', sent)
     return text_without_html_tags
 
-def remove_emojis(sent):
-    return clean(sent, no_emoji=True)
-
 def remove_duplicates(sent):
     return list(set(sent))
 
@@ -43,7 +40,6 @@ def preprocess_text(sent):
     text = lowercase(sent)
     text = remove_urls(text)
     text = remove_html(text)
-    text = remove_emojis(text)
     text = remove_punctuation(text)
     text = remove_num_symbols(text)
     text = remove_stopwords(text, "english")
