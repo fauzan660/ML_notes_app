@@ -15,12 +15,15 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'notes/css/base.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
 </head>
 
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white px-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"><span>Resume</span>Drop</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -29,28 +32,22 @@
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-<<<<<<< HEAD
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="members/">Rank Resume</a></li>
-                    <li class="nav-item"><a class="nav-link" href="job/">Upload Job</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
-=======
-                    <li class="nav-item"><a class="nav-link" href="#">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Upload Resume</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rank-resume">Rank Resume</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/job">Upload Job</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Your Files</a></li>
                     <a href="/accounts/google/login/?process=login"
-                        class="flex items-center gap-2 px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg shadow hover:shadow-md transition">
-                        Signin
+                        class="d-flex items-center gap-2 px-2 py-2 bg-white text-gray-700 rounded  transition signup_btn">
+                        SIGNUP
                     </a>
-                    <li class="nav-item signin_btn"><a class="nav-link" href="#">Logout</a></li>
->>>>>>> authentication
+                    <li class="mt-1 navbar_btn signin_btn"><a class="nav-link" href="#">LOGIN</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Main Content Block -->
-    <div class="container mt-5">
+    <div class="container p-0">
         {% block content %}
         <!-- Page specific content goes here -->
         {% endblock %}

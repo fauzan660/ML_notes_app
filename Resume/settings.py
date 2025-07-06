@@ -40,15 +40,13 @@ INSTALLED_APPS = [
     
     #authentication stuff
     'authentication',
-<<<<<<< HEAD
     'job',
     'home',
-=======
+    'resume_analysis',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
->>>>>>> authentication
 ]
 
 MIDDLEWARE = [
@@ -64,7 +62,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Resume.urls'
 # all auth specific settings
-LOGIN_REDIRECT_URL = '/members/'
+LOGIN_REDIRECT_URL = '/'
 
 
 AUTHENTICATION_BACKENDS = [
@@ -89,8 +87,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_LOGIN_METHODS = {'username'}
 
 
 TEMPLATES = [

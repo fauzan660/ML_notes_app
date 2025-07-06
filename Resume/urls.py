@@ -15,26 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-<<<<<<< HEAD
 from django.urls import path, include
 from notes.views import upload_file
 from job.views import upload_job
 from home.views import home
-from notes.views import resume_details
+from notes.views import resume_details, transformer_test
+from resume_analysis.views import resume_dashboard
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('members/', upload_file),
+    path('rank-resume/', upload_file),
     path('job/', upload_job),
-    path('home', home), 
-    path('members/<int:id>/', resume_details, name='resume_detail'),  # detail page
-    
-=======
-from notes.views import members
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('members/', members),
+    path('', home), 
+    path('rank-resume/job/<int:id>/', resume_details, name='resume_detail'),
+    path('rank-resume/job/<int:job_id>/resume/<int:res_id>/', resume_dashboard, name='resume_dashboard'),
     path('accounts/', include('allauth.urls')),
->>>>>>> authentication
+    path('transformer/job/<int:id>/', transformer_test)
 ]

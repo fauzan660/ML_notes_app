@@ -2,25 +2,59 @@
     font-family: sans-latin;
     src: url(../fonts/canva-sans-latin-ext.ttf);
 }
+@font-face {
+    font-family: latin;
+    src: url(../fonts//canva-sans-latin.ttf);
+}
 
  body {
      font-family: 'Inter', sans-serif;
-     background-color: #f8f9fa;
+     background-color: #fff;
  }
 
  .navbar-brand {
      font-weight: 600;
-     font-size: 1.5rem;
+     font-size: 1.2rem;
+        color: #54616c;
  }
  .navbar-brand span{
-    color: #54616c;
- }
 
- .hero {
-     background: linear-gradient(135deg, #eef2f3 0%, #ffffff 100%);
-     padding: 100px 0;
-     text-align: center;
+    color: #7a2eff;
  }
+ .nav-link {
+    font-size: 13px;
+ }
+  #navbarNav {
+      font-size: 14px;
+  }
+
+#navbarNav ul{
+    list-style: none;
+    padding: 0;
+}
+#navbarNav .nav-item {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+#navbarNav .nav-item::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #7a2eff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease-in-out;
+}
+
+#navbarNav .nav-item:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
 
  .hero h1 {
      font-size: 3rem;
@@ -46,27 +80,26 @@
      background-color: #3f51b5;
  }
  /* CSS */
- .signin_btn {
+ .navbar_btn {
      align-items: center;
      appearance: none;
-     background-color: #fff;
-     border-radius: 24px;
+     border-radius: 5px;
      border-style: none;
      border: #333;
      box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px, rgba(0, 0, 0, .14) 0 6px 10px 0, rgba(0, 0, 0, .12) 0 1px 18px 0;
      box-sizing: border-box;
-     color: #3c4043;
+     color: white;
      cursor: pointer;
      display: inline-flex;
      fill: currentcolor;
      font-family: "Google Sans", Roboto, Arial, sans-serif;
-     font-size: 14px;
+     font-size: 10px;
      font-weight: 500;
-     height: 48px;
+     height: 30px;
      justify-content: center;
      letter-spacing: .25px;
      line-height: normal;
-     max-width: 100%;
+     max-width: 80%;
      overflow: visible;
      padding: 2px 24px;
      position: relative;
@@ -74,16 +107,29 @@
      text-transform: none;
      transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1), opacity 15ms linear 30ms, transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
      user-select: none;
+     width: 15%;
      -webkit-user-select: none;
      touch-action: manipulation;
-     width: auto;
      will-change: transform, opacity;
      z-index: 0;
  }
 
+.signin_btn {
+    background-color: #7a2eff;
+    font-weight: 200;
+    color: white;
+
+}
+
+ .signin_btn a{
+    color: white
+ }
+  .signin_btn a:hover {
+      color: #fff;
+  }
  .signin_btn:hover {
-     background: #F6F9FE;
-     color: #174ea6;
+     background: #990efd;
+     color: #fff;
  }
 
  .signin_btn:active {
@@ -115,3 +161,17 @@
  .signin_btn:disabled {
      box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
  }
+
+
+ .signup_btn{
+    text-decoration: none;
+    font-weight: 600;
+    color: #000;
+    height: 30px;
+    width: 15%;
+ }
+
+.signup_btn :hover {
+    background: #7a2eff;
+    color: #fff;
+}

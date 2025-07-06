@@ -1,0 +1,62 @@
+{% extends "notes/base.html" %}
+{%load static%}
+
+
+    {%block extra_css%}
+    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+    {%endblock%}
+    <!-- Navbar -->
+    {%block content%}
+
+    <!-- Hero Section -->
+    <section class="hero-home text-center">
+        <div class="container">
+            <div class="row justify-content-start">
+                <div class="col-4 align-self-start">
+                    <h1>Upload<br/> Rank <br/> Improve</h1><br/>
+                    <p class="lead">your Resume with AI in just under 2 minutes</p>
+                    <a href="job" class="btn btn-lg mt-3 btn_get_started">Lets Go!</a>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-6 align-self-start"><img src="{% static 'notes/images/fallback.jpg' %}" class="hero-img" alt=""></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold">Our Features</h2>
+                <p class="text-muted">What makes us unique and special</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Fast Performance</h5>
+                            <p class="card-text">Enjoy blazing-fast loading and smooth transitions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Responsive Design</h5>
+                            <p class="card-text">Looks great on all devices — from phones to desktops.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">User Friendly</h5>
+                            <p class="card-text">Simple and intuitive interface that users love to explore.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {%endblock%}
+
