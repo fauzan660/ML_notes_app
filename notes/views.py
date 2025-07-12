@@ -12,11 +12,14 @@ from .resume_parsing import get_ner_from_39_env
 from .score_calculator import score_calculator
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import JsonResponse, HttpResponse
+from resume_analysis.spacy_resume.spacy_ner import spacy_ner
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 # def members(request):
 #     template = loader.get_template('notes/resume.html')
 #     return HttpResponse(template.render())
 
+@login_required
 def upload_file(request):
     jobs = PostJobModel.objects.filter(user=request.user)
     total_resume = UploadedFiles.objects.count()
@@ -54,6 +57,7 @@ def transformer_test(request, id):
             sorted_score = dict(sorted(rank_dict.items(), key=lambda item: item[1], reverse=True))
             return render(request, "notes/resume_detail.html", {'job': job_instance, "form": form, loader:False, "score": sorted_score})
         
+        
 def resume_details(request, id):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
@@ -61,9 +65,11 @@ def resume_details(request, id):
             files = form.cleaned_data['resume_file']
             print(f"************{id}***************")
             rank_dict = {}
+            job_instance = PostJobModel.objects.get(user = request.user, pk=id)
             for each in files:
-                job_instance = PostJobModel.objects.get(user = request.user, pk=id)
-                instance = UploadedFiles(user = request.user, job=job_instance, file_field=each,extracted_text=read_pdf(each))
+                pdf_text = read_pdf(each)
+                ner_results = spacy_ner(pdf_text)
+                instance = UploadedFiles(user = request.user, job=job_instance, file_field=each,extracted_text=pdf_text, extracted_resume_skills=ner_results)
                 
                 instance.save()
                 score = score_calculator(job_instance.job_description, read_pdf(each))
@@ -76,7 +82,7 @@ def resume_details(request, id):
             return render(request, "notes/resume_detail.html", {'job': job_instance, "form": form, loader:False, "score": sorted_score})
     else:
         form = UploadFileForm()
-        job = PostJobModel.objects.get(pk = id)            
+        job = PostJobModel.objects.get(pk = id, user=request.user)            
     return render(request, 'notes/resume_detail.html', {'job': job, "form": form})
     
     
