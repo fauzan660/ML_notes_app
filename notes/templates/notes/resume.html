@@ -3,36 +3,55 @@
 
 {% block title %}Resume Enhancer{% endblock %}
 
-{% block heading %}
-<h1>Add Your Resume</h1>
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'notes/css/resume.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="resume-form">
-
-    <section class="hero">
-        <div class="container">
-            <h1>Upload. Store. Share.</h1>
-            <p>Your all-in-one resume management dashboard</p>
-            <div class="text-center">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#uploadForm"
-                    aria-expanded="false" aria-controls="uploadForm">
-                    Upload Your Resume
-                </button>
+    <h2 class="job_h2">Select Job</h2>
+    <form class="search-bar d-flex" role="search">
+        <input class="search-bar-resume form-control form-control-sm me-2 rounded-pill shadow-sm" type="search" placeholder="Search..." aria-label="Search">
+        <button class="btn btn-primary rounded-pill btn-sm" type="submit">Search</button>
+    </form>
+    <section class="resume_hero mt-5">
+        <div class="card-container col-12">
+            {% for job in jobs %}
+            <div class="job-card col-3">
+                <div class="job-card-header">
+                    <div class="job-meta">
+                        <div class="job-icon">
+                            <i class="bx bxl-briefcase"></i>
+                        </div>
+                        <div class="job-details">
+                            <h6 class="job-type">{{ job.job_type }}</h6>
+                            <span class="posted-time">Posted recently</span>
+                        </div>
+                    </div>
+                    <div class="job-badge">
+                        <span>Job</span>
+                    </div>
+                </div>
+                <div class="job-card-body">
+                    <a href="{% url 'resume_detail' job.id %}" class="job-link">
+                        <h3 class="job-title">{{ job.job_title }}</h3>
+                    </a>
+                    <p class="job-description truncate-one-line">{{ job.job_description }}</p>
+                    <div class="job-progress mt-4">
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: {{ job.total_resume_count }}%;"></div>
+                        </div>
+                        <div class="progress-info">
+                            {{ job.get_job_resume }} Applied <span class="total-count">of {{ total_count }} total</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+            {% empty %}
+            <p>No jobs available.</p>
+            {% endfor %}
         </div>
     </section>
-<!-- Button to Show Form -->
 
-<!-- Collapsible Form -->
-<div class="collapse mt-4" id="uploadForm">
-    <div class="card card-body shadow-sm">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-</div>
 </div>
 {% endblock %}

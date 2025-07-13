@@ -1,0 +1,254 @@
+{% extends './base.html'%}
+{% load static %}
+
+{% block title %}
+{{ job.job_title }} - Details
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'notes/css/resume_detail.css' %}">
+<style>
+    :root {
+        --primary-color: #6c63ff;
+        --secondary-color: #4d44db;
+        --light-bg: #f8f9fa;
+        --dark-text: #2c3e50;
+        --light-text: #7f8c8d;
+        --success-color: #2ecc71;
+        --border-radius: 12px;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    body {
+        background-color: #f5f7fb;
+        color: var(--dark-text);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* Equal width columns that won't shrink */
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        align-items: start; /* Align items at the top */
+    }
+    
+    .job-card, .upload-card, .results-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .job-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .job-title {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .job-description {
+        color: var(--dark-text);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .job-type {
+        display: inline-block;
+        background: #e0e7ff;
+        color: var(--secondary-color);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .upload-form {
+        margin-top: 1.5rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: var(--dark-text);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .form-control {
+        border: 2px solid #e2e8f0;
+        border-radius: var(--border-radius);
+        padding: 0.8rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
+    }
+    
+    .btn-purple {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .btn-purple:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+    
+    .results-card {
+        height: calc(100vh - 200px); /* Set a fixed height with some breathing room */
+        overflow-y: auto; /* Make it scrollable */
+        position: sticky;
+        top: 20px; /* Stick to the top with some margin */
+    }
+    
+    .score-section {
+        background: var(--light-bg);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .score-title {
+        color: var(--secondary-color);
+        font-size: 1.0rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stars {
+        color: #f39c12;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .dashboard-container {
+            grid-template-columns: 1fr;
+        }
+    }
+    .skills-section {
+    margin-top: 1.5rem;
+        }
+
+.skills-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.skills-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skill-pill {
+    background-color: #e8edff;
+    color: var(--primary-color);
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+.skill-pill:hover {
+    background-color: var(--primary-color);
+    color: white;
+    cursor: default;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Left Column -->
+    <div class="left-column">
+        <!-- Job Details Card -->
+        <div class="job-card">
+            <div class="job-header">
+                <h1 class="job-title">{{ job.job_title }}</h1>
+                <div class="job-type">{{ job.job_type }}</div>
+            </div>
+            <p class="job-description">{{ job.job_description }}</p>
+            {% if job.extracted_skills %}
+                <div class="skills-section">
+                    <h4 class="skills-title">Required Skills</h4>
+                    <div class="skills-tags">
+                        {% for skill in job.extracted_skills %}
+                            <span class="skill-pill">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Resume Upload Card -->
+        <div class="upload-card">
+            <h3>Upload Resumes</h3>
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="resumeFileInput" class="form-label">Select Resume Files</label>
+                    <input class="form-control" type="file" id="resumeFileInput" name="resume_file" multiple>
+                    <small class="form-text text-muted">Supported formats: PDF, DOCX (Max 10MB each)</small>
+                </div>
+                <button type="submit" id="load-btn" class="btn btn-purple">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload & Process
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Right Column - Results -->
+     <div class="right-column">
+        <div class="results-card">
+            <h2>Analysis Results</h2>
+            <div class="results-content">
+                {% if score %}
+                    {% for key, value in score.items %}
+                    <div class="score-section">
+                        <h4 class="score-title">{{ key }}</h4>
+                        <a href="{% url 'resume_dashboard' job.id value.1 %}"> click here to analyze</a>
+                        <div class="stars">
+                            ({{ value.0 }} out of 5)
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <img src="{% static 'notes/images/empty-results.svg' %}" alt="No results yet" class="empty-image">
+                        <h4>No results yet</h4>
+                        <p>Upload resumes to see matching analysis</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

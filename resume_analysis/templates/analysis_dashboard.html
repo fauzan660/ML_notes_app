@@ -1,0 +1,63 @@
+{% extends 'notes/base.html'%}
+{% load static %}
+
+  <!-- Tailwind CSS CDN -->
+{%block style%}
+<link rel="stylesheet" href="{% static 'job/css/loader.css' %}">
+{%endblock%}
+
+{%block content %}
+
+  <div class="">
+    <h1 class="text-3xl font-bold text-blue-600 mb-4 text-center">
+      Resume Analysis
+    </h1>
+    <h2 class="text-xl text-gray-600 text-center mb-6">
+      Job #{{job_number}} | Resume #{{res_number}}
+    </h2>
+    
+    <h2 class="text-2xl font-bold mb-4">Resume PDF</h2>
+
+    {% if pdf_file %}
+    <div class="d-flex p-5 gap-4">
+        <div class="col-6">
+        <h3 class="text-2xl font-semibold mb-4 text-gray-700">Extracted Entities</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {% for item in ner_list %}
+          <div class="bg-blue-100 border border-blue-100 p-2 rounded shadow text-center">
+            <span class="text-blue-700 font-small text-sm">{{ item }}</span>
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+        <div class="col-6"><embed src="{{ simple_pdf_url }}" width="100%" height="80%" type="application/pdf"></div>
+    </div>
+    {% else %}
+    <p>No PDF uploaded.</p>
+    {% endif %}
+  </div>
+{%endblock%}
+
+{%block script%}
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
+
+<script>
+  // Prevent Pace from auto-hiding before we want it to
+  Pace.options = {
+    ajax: true,
+    document: true,
+    eventLag: false,
+    restartOnRequestAfter: false,
+    startOnPageLoad: true
+  };
+
+  // When Pace finishes loading (but before it hides)
+  Pace.on('done', function () {
+    // Force loader to stay for 5 seconds
+    setTimeout(function () {
+      document.querySelector('.pace').classList.add('pace-inactive'); // hide loader
+    }, 5000);
+  });
+</script>
+{%endblock%}
