@@ -42,7 +42,43 @@
     updateCities() {
     this.cities = this.citiesByCountry[this.country] || [];
     this.city = '';
-    }
+    }, 
+    generateDescription() {
+        let jobData = {
+        job_title: this.title,
+        job_type: this.type,
+        work_mode: this.mode,
+        industry: this.industry,
+        experience_level: this.experience,
+        min_experience: this.min_experience,
+        max_experience: this.max_experience,
+        country: this.country,
+        city: this.city,
+        };
+        fetch('/job/generate_description/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jobData)
+            
+    })
+    .then(response => response.json())
+    .then(data => {
+        let parsed = JSON.parse(data.description);
+        this.fullText = Object.values(parsed)[0];
+        this.description = '';
+        this.index = 0;
+        this.typeWriter();
+    });
+    },
+    
+    typeWriter() {
+    if (this.index < this.fullText.length) { this.description +=this.fullText[this.index++]; setTimeout(()=>
+        this.typeWriter(), 20);
+        }
+        }
 
 }">
 
@@ -183,7 +219,6 @@
                         </div>
                     </div>
                 </div>
-            
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
                     <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
@@ -196,6 +231,7 @@
                     <textarea class="form-control form-control-lg rounded-3" name="job_description" x-model="description" rows="5"
                         placeholder="What will they do? What makes the job exciting?" required></textarea>
                 </div>
+                <button type="button" class="btn btn-outline-secondary rounded-pill" @click="generateDescription">✨Generate</button>
                 <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
                     <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>

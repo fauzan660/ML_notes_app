@@ -8,6 +8,8 @@ import csv
 from collections import defaultdict
 from django.shortcuts import render
 import json
+from .job_gen import generate_description
+from django.http import JsonResponse
 
 @login_required
 def upload_job(request):
@@ -71,3 +73,23 @@ def upload_job(request):
             'countries': json.dumps(countries),
             'cities_by_country': json.dumps(cities_by_country)
         })
+        
+def generate_job_description(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        job_title = data.get('job_title')
+        job_type = data.get('job_type')
+        work_mode = data.get('work_mode')
+        industry = data.get('industry')
+        experience_level = data.get('experience_level')
+        min_experience = data.get('min_experience')
+        max_experience = data.get('max_experience')
+        country = data.get('country')
+        city = data.get('city')
+
+        # Now you have all the data to use with your GenAI prompt.
+        # Example dummy response:
+        desc = generate_description(job_title=job_title, job_type=job_type, work_mode=work_mode, industry=industry, experience_level=experience_level, min_experience=min_experience, max_experience=max_experience, country=country, city=city)
+
+        return JsonResponse({"description": desc})
+        
