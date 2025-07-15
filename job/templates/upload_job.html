@@ -1,43 +1,265 @@
-{% extends 'notes/base.html'%}
+{% extends 'notes/base.html' %}
 {% load static %}
 
-    {% block title%}<title>Post a Job</title>{%endblock%}
-    {%block extra_css%}<link rel="stylesheet" href="{% static 'job/css/job.css' %}">{%endblock%}
+{% block title %}Post a Job
+{% endblock %}
 
+{% block extra_css %}
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}
 
-{%block content%}
-    <div class="container mt-5">
-        <div class="form-wrapper">
-            <h2 class="job_h2">Post a Job</h2>
-            <form method="POST" novalidate>
-                {% csrf_token %}
+{% block content %}
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light"
+    x-data="{
+    step: 1,
+    title: '',
+    description: '',
+    type: '',
+    mode: '',
+    industry: '',
+    industries: {{ industries|safe }},
+    filteredIndustries: [],
+    updateSuggestions() {
+        this.filteredIndustries = this.industries.filter(i =>
+            i.toLowerCase().includes(this.industry.toLowerCase())
+        ).slice(0, 5);
+    },
+    selectIndustry(ind) {
+        this.industry = ind;
+        this.filteredIndustries = [];
+    }, 
+    experience: '', 
+    min_experience: '',
+    max_experience: '',
+    country: '',
+    city: '',
+    countries: JSON.parse('{{ countries|escapejs }}'),
+    citiesByCountry: JSON.parse('{{ cities_by_country|escapejs }}'),
+    cities: [],
+    updateCities() {
+    this.cities = this.citiesByCountry[this.country] || [];
+    this.city = '';
+    }
 
-                <div class="mb-3">
-                    {{ form.title.label_tag }}
-                    {{ form.title }}
-                    {% if form.title.errors %}
-                    <div class="text-danger">{{ form.title.errors }}</div>
-                    {% endif %}
-                </div>
+}">
 
-                <div class="mb-3">
-                    {{ form.description.label_tag }}
-                    {{ form.description }}
-                    {% if form.description.errors %}
-                    <div class="text-danger">{{ form.description.errors }}</div>
-                    {% endif %}
-                </div>
+    <div class="card shadow-lg p-4 p-md-5 rounded-4 w-100" style="max-width: 720px;">
 
-                <div class="mb-3">
-                    {{ form.type.label_tag }}
-                    {{ form.type }}
-                    {% if form.type.errors %}
-                    <div class="text-danger">{{ form.type.errors }}</div>
-                    {% endif %}
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h2 class="fw-bold mb-2">🚀 Post a Job</h2>
+            <div class="d-flex justify-content-center gap-2">
+                <template x-for="n in 5">
+                    <div class="rounded-pill" :class="step === n ? 'bg-primary' : 'bg-secondary'"
+                        style="width: 10px; height: 10px;"></div>
+                </template>
+            </div>
         </div>
+
+        <!-- Form -->
+        <form method="POST" x-ref="form">
+            {% csrf_token %}
+
+            <!-- Step 1: Title -->
+            <div x-show="step === 1" x-transition>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">📝 Job Title</label>
+                    <input type="text" class="form-control form-control-lg rounded-3" name="job_title" x-model="title"
+                        placeholder="e.g. Frontend Developer" required>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Description -->
+            
+
+            <!-- Step 3: Type -->
+            <div x-show="step === 2" x-transition>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">📦 Job Type</label>
+                    <select class="form-select form-select-lg rounded-3" name="job_type" x-model="type" required>
+                        <option value="" disabled selected>Select job type</option>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                </div>
+                <div class="mb-3" x-show="type === 'Full-time' || type === 'Part-time' || type === 'Contract' || type === 'Internship'">
+                    <label class="form-label fw-semibold">🏠 Work Mode</label>
+                    <select class="form-select form-select-lg rounded-3" name="work_mode" x-model="mode">
+                        <option value="" disabled selected>Select work mode</option>
+                        <option value="Remote">Remote</option>
+                        <option value="On-site">On-site</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div  x-show="mode === 'On-site' || mode === 'Hybrid'">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">🌎 Country</label>
+                        <select class="form-select form-select-lg rounded-3" name="country" x-model="country" @change="updateCities">
+                            <option value="" disabled selected>Select Country</option>
+                            <template x-for="c in countries" :key="c">
+                                <option :value="c" x-text="c"></option>
+                            </template>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3" x-show="cities.length > 0">
+                        <label class="form-label fw-semibold">🏙️ City</label>
+                        <select class="form-select form-select-lg rounded-3" name="city" x-model="city">
+                            <option value="" disabled selected>Select City</option>
+                            <template x-for="ct in cities" :key="ct">
+                                <option :value="ct" x-text="ct"></option>
+                            </template>
+                        </select>
+                    </div>
+
+                </div>
+                
+
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Industry -->
+            <div x-show="step === 3" x-transition>
+                <div class="mb-3 position-relative">
+                    <label class="form-label fw-semibold">🏢 Industry</label>
+                    <input type="text" class="form-control form-control-lg rounded-3" name="industry" x-model="industry"
+                        @input="updateSuggestions" autocomplete="off" placeholder="Start typing an industry..." required>
+            
+                    <ul class="list-group position-absolute w-100 shadow-sm mt-1" style="z-index: 1000;"
+                        x-show="filteredIndustries.length > 0">
+                        <template x-for="option in filteredIndustries" :key="option">
+                            <li @click="selectIndustry(option)" class="list-group-item list-group-item-action" x-text="option"></li>
+                        </template>
+                    </ul>
+                </div>
+            
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Preview →</button>
+                </div>
+            </div>
+            <!-- Step 5: Experience Level & Years -->
+            <div x-show="step === 4" x-transition>
+                <input type="hidden" name="experience_level" x-model="experience">
+                
+                <div class="btn-group d-flex flex-wrap gap-2" role="group">
+                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
+                        :class="experience === 'Entry-Level' ? 'active btn-primary text-white' : ''"
+                        @click="experience = 'Entry-Level'">
+                        🚀 Entry-Level
+                    </button>
+                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
+                        :class="experience === 'Mid-Level' ? 'active btn-primary text-white' : ''" @click="experience = 'Mid-Level'">
+                        💼 Mid-Level
+                    </button>
+                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
+                        :class="experience === 'Senior-Level' ? 'active btn-primary text-white' : ''"
+                        @click="experience = 'Senior-Level'">
+                        🏆 Senior-Level
+                    </button>
+                </div>
+            
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">📆 Expected Experience Range (Years)</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" name="min_experience" class="form-control form-control-lg rounded-3" min="0" max="10"
+                                placeholder="Min Years" x-model="min_experience">
+                        </div>
+                        <div class="col">
+                            <input type="number" name="max_experience" class="form-control form-control-lg rounded-3" min="0" max="10"
+                                placeholder="Max Years" x-model="max_experience">
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
+                </div>
+            </div>
+
+            <div x-show="step === 5" x-transition>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">💬 Job Description</label>
+                    <textarea class="form-control form-control-lg rounded-3" name="job_description" x-model="description" rows="5"
+                        placeholder="What will they do? What makes the job exciting?" required></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Summary -->
+            <div x-show="step === 6" x-transition>
+                <h4 class="fw-bold mb-4 text-center">📄 Final Job Summary</h4>
+            
+                <div class="border rounded-4 p-3 mb-3 bg-light">
+                    <h6 class="fw-bold mb-1 text-primary">Job Title</h6>
+                    <p class="mb-0 text-muted" x-text="title || 'Not provided'"></p>
+                </div>
+            
+                <div class="border rounded-4 p-3 mb-3 bg-light">
+                    <h6 class="fw-bold mb-1 text-primary">Industry</h6>
+                    <p class="mb-0 text-muted" x-text="industry || 'Not provided'"></p>
+                </div>
+            
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        <div class="border rounded-4 p-3 bg-light h-100">
+                            <h6 class="fw-bold mb-1 text-primary">Job Type</h6>
+                            <p class="mb-0 text-muted" x-text="type || 'Not provided'"></p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded-4 p-3 bg-light h-100">
+                            <h6 class="fw-bold mb-1 text-primary">Work Mode</h6>
+                            <p class="mb-0 text-muted" x-text="mode || 'Not provided'"></p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="row g-3 mb-3">
+                    <div class="col">
+                        <div class="border rounded-4 p-3 bg-light h-100">
+                            <h6 class="fw-bold mb-1 text-primary">Experience Level</h6>
+                            <p class="mb-0 text-muted" x-text="experience || 'Not provided'"></p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded-4 p-3 bg-light h-100">
+                            <h6 class="fw-bold mb-1 text-primary">Years (Range)</h6>
+                            <p class="mb-0 text-muted">
+                                <span x-text="min_experience || '0'"></span> - <span x-text="max_experience || '0'"></span> Years
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="border rounded-4 p-3 mb-3 bg-light">
+                    <h6 class="fw-bold mb-1 text-primary">Job Description</h6>
+                    <p class="mb-0 text-muted" x-text="description || 'No description provided yet.'"></p>
+                </div>
+            
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="submit" class="btn btn-success px-4 rounded-pill">✅ Confirm & Submit</button>
+                </div>
+            </div>
+        </form>
+
     </div>
-{%endblock%}
+</div>
+{% endblock %}
