@@ -36,6 +36,9 @@
     max_experience: '',
     country: '',
     city: '',
+    ai_skills: [], // populated from AI
+    user_skill: '', // input for user typing
+    final_skills: [], // combined list
     countries: JSON.parse('{{ countries|escapejs }}'),
     citiesByCountry: JSON.parse('{{ cities_by_country|escapejs }}'),
     cities: [],
@@ -66,11 +69,15 @@
     })
     .then(response => response.json())
     .then(data => {
-        let parsed = JSON.parse(data.description);
-        this.fullText = Object.values(parsed)[0];
-        this.description = '';
-        this.index = 0;
-        this.typeWriter();
+    let parsed = JSON.parse(data.description);
+    let values = Object.values(parsed);
+    
+    this.fullText = values[0]; // First item = job description
+    this.description = '';
+    this.ai_skills = values[1] || [];
+    this.final_skills = [...this.ai_skills];
+    this.index = 0;
+    this.typeWriter();
     });
     },
     
@@ -237,9 +244,62 @@
                     <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
                 </div>
             </div>
+            <div x-show="step === 6" x-transition>
+                <h4 class="fw-bold mb-4 text-center">🎯 Required Skills</h4>
+            
+                <!-- AI Skills Section -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold">✨ AI Suggested Skills:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <template x-for="skill in ai_skills" :key="skill">
+                            <button type="button" class="btn btn-sm rounded-pill" :class="final_skills.includes(skill) 
+                                        ? 'btn-primary text-white' 
+                                        : 'btn-outline-primary'" @click="final_skills.includes(skill) 
+                                        ? final_skills = final_skills.filter(s => s !== skill) 
+                                        : final_skills.push(skill)">
+                                <span x-text="skill"></span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            
+                <!-- Manual Input Section -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold">➕ Add Your Own Skills:</h6>
+                    <input type="text" x-model="user_skill" class="form-control rounded-pill"
+                        placeholder="Type a skill and press Enter" @keydown.enter.prevent="
+                            if (user_skill.trim() && !final_skills.includes(user_skill.trim())) {
+                                final_skills.push(user_skill.trim());
+                                user_skill = '';
+                            }
+                        ">
+                </div>
+            
+                <!-- Final Skills Tags -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold">✅ Your Final Skills:</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <template x-for="skill in final_skills" :key="skill">
+                            <span class="badge rounded-pill bg-primary text-white d-inline-flex align-items-center">
+                                <span x-text="skill"></span>
+                                <button type="button" class="btn-close btn-close-white ms-2"
+                                    @click="final_skills = final_skills.filter(s => s !== skill)">
+                                </button>
+                            </span>
+                        </template>
+                    </div>
+                </div>
+            
+                <input type="hidden" name="extracted_skills" :value="JSON.stringify(final_skills)">
+            
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
+                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
+                </div>
+            </div>
 
             <!-- Step 5: Summary -->
-            <div x-show="step === 6" x-transition>
+            <div x-show="step === 7" x-transition>
                 <h4 class="fw-bold mb-4 text-center">📄 Final Job Summary</h4>
             
                 <div class="border rounded-4 p-3 mb-3 bg-light">
@@ -289,11 +349,21 @@
                     <p class="mb-0 text-muted" x-text="description || 'No description provided yet.'"></p>
                 </div>
             
+                <div class="border rounded-4 p-3 mb-3 bg-light">
+                    <h6 class="fw-bold mb-1 text-primary">Final Skills Selected</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        <template x-for="skill in final_skills" :key="skill">
+                            <span class="badge bg-primary rounded-pill text-white" x-text="skill"></span>
+                        </template>
+                    </div>
+                </div>
+            
                 <div class="d-flex justify-content-between mt-4">
                     <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
                     <button type="submit" class="btn btn-success px-4 rounded-pill">✅ Confirm & Submit</button>
                 </div>
             </div>
+
         </form>
 
     </div>

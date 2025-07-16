@@ -38,7 +38,7 @@ def upload_job(request):
                     max_experience=cleaned_data.get('max_experience'),
                     country=cleaned_data.get('country', ''),
                     city=cleaned_data.get('city', ''),
-                    extracted_skills=textual_ner(cleaned_data['job_description'])
+                    extracted_skills=cleaned_data.get('extracted_skills')
                 )
                 print(job)
                 return redirect(upload_file)
@@ -66,7 +66,6 @@ def upload_job(request):
 
         countries = sorted(list(cities_by_country.keys()))
         form = UploadJobForm()
-        print(json.dumps(countries))
         return render(request, "upload_job.html", {
             "form": form,
             "industries": industries,

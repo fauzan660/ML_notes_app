@@ -15,7 +15,8 @@ class UploadJobForm(forms.ModelForm):
             'min_experience',
             'max_experience',
             'country',
-            'city'
+            'city', 
+            'extracted_skills'
         ]
         widgets = {
             'job_title': forms.TextInput(attrs={
