@@ -1,62 +1,1135 @@
 {% extends "notes/base.html" %}
-{%load static%}
+{% load static %}
 
+{% block style %}
+<!-- Google Fonts -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Bricolage+Grotesque:wght@400;600;700&display=swap"
+    rel="stylesheet">
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'home/css/home.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
-    {%block extra_css%}
-    <link rel="stylesheet" href="{% static 'home/css/home.css' %}">
-    {%endblock%}
-    <!-- Navbar -->
-    {%block content%}
+{% endblock %}
 
-    <!-- Hero Section -->
-    <section class="hero-home text-center">
-        <div class="container">
-            <div class="row justify-content-start">
-                <div class="col-4 align-self-start">
-                    <h1>Upload<br/> Rank <br/> Improve</h1><br/>
-                    <p class="lead">your Resume with AI in just under 2 minutes</p>
-                    <a href="job" class="btn btn-lg mt-3 btn_get_started">Lets Go!</a>
+{%block extra_css%}
+
+<style>
+    /* Base Styles */
+    .rr-hero-section {
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        min-height: 100vh;
+        overflow: hidden;
+        position: relative;
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+
+    .rr-hero-bg-pattern {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDIpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=');
+        opacity: 0.4;
+    }
+
+    .rr-hero-container {
+        position: relative;
+        z-index: 2;
+        padding: 3rem 0;
+    }
+
+    /* Typography */
+    .rr-hero-title {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .rr-title-line {
+        display: block;
+    }
+
+    .rr-hero-subtitle {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 400;
+        color: #b8b8b8;
+        max-width: 90%;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .rr-highlight-text {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 0.2rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    /* Buttons */
+    .rr-hero-buttons {
+        margin-top: 2.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .rr-primary-btn,
+    .rr-secondary-btn {
+        font-family: 'Inter', sans-serif;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        padding: 0.9rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+
+    .rr-primary-btn {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+    }
+
+    .rr-secondary-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .rr-primary-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4);
+        color: white;
+    }
+
+    .rr-secondary-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    /* Social Proof */
+    .rr-social-proof {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        margin-top: 3rem;
+        max-width: fit-content;
+    }
+
+    .rr-ratings {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rr-stars {
+        display: flex;
+        margin-bottom: 0.5rem;
+    }
+
+    .rr-star {
+        color: #fbbf24;
+        margin-right: 0.25rem;
+    }
+
+    .rr-rating-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .rr-stats {
+        padding-left: 2rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .rr-stat-number {
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .rr-stat-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Image Container */
+    .rr-image-container {
+        position: relative;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+
+    .rr-main-image {
+        max-width: 85%;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transform: rotateY(-5deg) rotateX(2deg);
+        transition: all 0.5s ease;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .rr-image-container:hover .rr-main-image {
+        transform: rotateY(-2deg) rotateX(1deg) scale(1.02);
+    }
+
+    .rr-image-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(79, 70, 229, 0.3) 0%, rgba(124, 58, 237, 0) 70%);
+        border-radius: 12px;
+        z-index: -1;
+        transform: translateZ(-20px);
+    }
+
+    /* Floating Elements */
+    .rr-floating-circle {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: rgba(79, 70, 229, 0.1);
+        border-radius: 50%;
+        top: -10px;
+        left: 20px;
+        z-index: -1;
+        animation: rr-float 6s ease-in-out infinite;
+    }
+
+    .rr-floating-pill {
+        position: absolute;
+        width: 120px;
+        height: 20px;
+        background: rgba(124, 58, 237, 0.1);
+        border-radius: 10px;
+        bottom: 30px;
+        right: -30px;
+        z-index: -1;
+        animation: rr-float 8s ease-in-out infinite 2s;
+    }
+
+    /* Scroll Indicator */
+    .rr-scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+    .rr-scroll-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+    }
+
+    .rr-scroll-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .rr-scroll-text {
+        margin-bottom: 0.5rem;
+    }
+
+    .rr-mouse-animation {
+        width: 20px;
+        height: 35px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        position: relative;
+    }
+
+    .rr-mouse {
+        width: 4px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 2px;
+        position: absolute;
+        top: 6px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: rr-scroll 2s infinite;
+    }
+
+    /* Animations */
+    @keyframes rr-float {
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        50% {
+            transform: translateY(-20px) rotate(5deg);
+        }
+    }
+
+    @keyframes rr-scroll {
+        0% {
+            top: 6px;
+            opacity: 1;
+        }
+
+        100% {
+            top: 15px;
+            opacity: 0;
+        }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 992px) {
+        .rr-hero-title {
+            font-size: 3rem;
+        }
+
+        .rr-hero-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .rr-main-image {
+            max-width: 70%;
+            margin-top: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .rr-hero-title {
+            font-size: 2.5rem;
+        }
+
+        .rr-hero-buttons {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .rr-primary-btn,
+        .rr-secondary-btn {
+            width: 100%;
+        }
+
+        .rr-social-proof {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .rr-stats {
+            border-left: none;
+            padding-left: 0;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    /* FEATURES SECTION */
+    #features {
+        background: #fafafa;
+        font-family: 'Inter', sans-serif;
+    }
+
+    #features .card {
+        transition: all 0.3s ease;
+        border-radius: 12px !important;
+        background: white;
+        border: 1px solid #e5e7eb;
+        padding: 2rem;
+    }
+
+    #features .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+        border-color: #4f46e5;
+    }
+
+    #features .card i {
+        transition: transform 0.3s ease;
+        color: #4f46e5;
+    }
+
+    #features .card:hover i {
+        transform: scale(1.1);
+    }
+
+    #features .display-5 {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    #features ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    #features ul li {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        color: #4b5563;
+    }
+
+    #features ul li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #10b981;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    #features .row .bg-white {
+        background: white !important;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+    }
+
+    #features .display-6 {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    #features .badge {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    #features .bg-success.bg-opacity-10 {
+        background: rgba(16, 185, 129, 0.1) !important;
+        border-radius: 8px;
+        padding: 0.5rem;
+    }
+
+    @keyframes features-float {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+
+    #features .col-md-4:nth-child(odd) .card {
+        animation: features-float 4s ease-in-out infinite;
+    }
+
+    #features .col-md-4:nth-child(even) .card {
+        animation: features-float 4s ease-in-out infinite reverse;
+    }
+
+    @media (max-width: 768px) {
+        #features .card {
+            margin-bottom: 1rem;
+        }
+
+        #features .display-5 {
+            font-size: 2rem;
+        }
+    }
+
+    /* TESTIMONIALS SECTION */
+    #testimonials {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+
+    #testimonials::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.03)"><polygon points="0,0 1000,0 1000,100 0,20"/></svg>');
+        background-size: cover;
+        z-index: 1;
+    }
+
+    #testimonials .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    #testimonials h2 {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 600;
+        color: #ffffff;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+    }
+
+    #testimonials .carousel-inner {
+        padding: 2rem 0;
+    }
+
+    #testimonials .blockquote {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        margin: 0 auto;
+        max-width: 700px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        transition: all 0.5s ease;
+    }
+
+    #testimonials .blockquote:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    #testimonials .blockquote p {
+        font-size: 1.2rem;
+        font-weight: 400;
+        color: #ffffff;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        font-style: italic;
+    }
+
+    #testimonials .blockquote-footer {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1rem;
+    }
+
+    #testimonials .blockquote-footer cite {
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 400;
+    }
+
+    #testimonials .carousel-control-prev,
+    #testimonials .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    #testimonials .carousel-control-prev:hover,
+    #testimonials .carousel-control-next:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-50%) scale(1.1);
+    }
+
+    @keyframes testimonial-slide-in {
+        0% {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    #testimonials .carousel-item.active .blockquote {
+        animation: testimonial-slide-in 0.6s ease-out;
+    }
+
+    /* CTA SECTION */
+    .cta-section {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        position: relative;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        z-index: 1;
+    }
+
+    .cta-section .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cta-section h3 {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 600;
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        color: white;
+    }
+
+    .cta-section .btn {
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+        padding: 1rem 2.5rem;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        text-decoration: none;
+        background: #ffffff;
+        color: #4f46e5;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-section .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+        color: #4f46e5;
+    }
+
+    @keyframes cta-pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .cta-section .container.animate__animated.animate__pulse {
+        animation: cta-pulse 2s ease-in-out infinite;
+    }
+
+    /* FOOTER */
+    footer {
+        background: #1f2937;
+        font-family: 'Inter', sans-serif;
+        position: relative;
+    }
+
+    footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, #4f46e5, #7c3aed, #4f46e5);
+        background-size: 200% 100%;
+        animation: footer-gradient 3s ease infinite;
+    }
+
+    @keyframes footer-gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    footer h5 {
+        font-family: 'Bricolage Grotesque', sans-serif;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+    }
+
+    footer h6 {
+        font-weight: 500;
+        color: #e5e7eb;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+    }
+
+    footer p {
+        color: #9ca3af;
+        line-height: 1.6;
+        font-weight: 400;
+    }
+
+    footer ul {
+        padding: 0;
+        margin: 0;
+    }
+
+    footer ul li {
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    footer ul li:hover {
+        transform: translateX(5px);
+    }
+
+    footer ul li a {
+        color: #9ca3af;
+        text-decoration: none;
+        font-weight: 400;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    footer ul li a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #4f46e5;
+        transition: width 0.3s ease;
+    }
+
+    footer ul li a:hover {
+        color: #ffffff;
+    }
+
+    footer ul li a:hover::after {
+        width: 100%;
+    }
+
+    footer small {
+        color: #6b7280;
+        font-weight: 300;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        #testimonials h2 {
+            font-size: 2rem;
+        }
+
+        #testimonials .blockquote {
+            padding: 2rem 1.5rem;
+        }
+
+        #testimonials .blockquote p {
+            font-size: 1.1rem;
+        }
+
+        .cta-section h3 {
+            font-size: 1.8rem;
+        }
+
+        .cta-section .btn {
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+        }
+
+        footer .text-end {
+            text-align: center !important;
+        }
+    }
+</style>
+
+{%endblock%}
+
+{% block content %}
+
+<section class="rr-hero-section">
+    <!-- Animated background elements -->
+    <div class="rr-hero-bg-pattern"></div>
+
+    <div class="container rr-hero-container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h1 class="rr-hero-title animate__animated animate__fadeInDown">
+                    <span class="rr-title-line">Screen.</span>
+                    <span class="rr-title-line">Rank.</span>
+                    <span class="rr-title-line">Hire.</span>
+                </h1>
+
+                <p class="rr-hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                    Turn 200 resumes into 5 qualified candidates in minutes. Our AI analyzes every resume against your
+                    job posting to surface only the best matches.
+                    <span class="rr-highlight-text">95% time savings guaranteed</span>
+                </p>
+
+                <div class="rr-hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+                    <a href="job/" class="rr-primary-btn">
+                        <span class="rr-btn-content">
+                            Post Your Job
+                        </span>
+                    </a>
+
+                    <a href="#features" class="rr-secondary-btn">
+                        <span class="rr-btn-content">
+                            See How It Works
+                        </span>
+                    </a>
                 </div>
-                <div class="col-2"></div>
-                <div class="col-6 align-self-start"><img src="{% static 'notes/images/fallback.jpg' %}" class="hero-img" alt=""></div>
+
+                <div class="rr-social-proof animate__animated animate__fadeInUp animate__delay-3s">
+                    <div class="rr-ratings">
+                        <div class="rr-stars">
+                            <i class="fas fa-star rr-star"></i>
+                            <i class="fas fa-star rr-star"></i>
+                            <i class="fas fa-star rr-star"></i>
+                            <i class="fas fa-star rr-star"></i>
+                            <i class="fas fa-star rr-star"></i>
+                        </div>
+                        <small class="rr-rating-text">4.9/5 from 2,800+ hiring managers</small>
+                    </div>
+                    <div class="rr-stats">
+                        <div class="rr-stat-number">50,000+</div>
+                        <small class="rr-stat-text">Resumes Screened Weekly</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 text-center animate__animated animate__fadeInRight animate__delay-1s">
+                <div class="rr-image-container">
+                    <img src="{% static 'notes/images/fallback.jpg' %}" alt="Resume AI" class="rr-main-image">
+                    <div class="rr-image-glow"></div>
+
+                    <!-- Floating elements around the image -->
+                    <div class="rr-floating-circle"></div>
+                    <div class="rr-floating-pill"></div>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Features Section -->
-    <section id="features" class="features py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="fw-bold">Our Features</h2>
-                <p class="text-muted">What makes us unique and special</p>
+    <!-- Scrolling indicator -->
+    <div class="rr-scroll-indicator animate__animated animate__fadeIn animate__delay-4s">
+        <a href="#features" class="rr-scroll-link">
+            <div class="rr-scroll-content">
+                <span class="rr-scroll-text">See how we solve real hiring problems</span>
+                <div class="rr-mouse-animation">
+                    <div class="rr-mouse"></div>
+                </div>
             </div>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Fast Performance</h5>
-                            <p class="card-text">Enjoy blazing-fast loading and smooth transitions.</p>
-                        </div>
-                    </div>
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5 animate__animated animate__zoomIn">
+            <h2 class="fw-bold">Real Problems. Real Solutions.</h2>
+            <p class="text-muted">Stop drowning in resumes. Start finding the right talent.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="mb-3"><i class="fas fa-search fs-1"></i></div>
+                    <h5 class="fw-semibold">Smart Keyword Matching</h5>
+                    <p class="text-muted">Tired of manually scanning for "Python," "5+ years," or "MBA"? Our AI finds
+                        exact skill matches you're looking for, ranked by relevance.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Responsive Design</h5>
-                            <p class="card-text">Looks great on all devices — from phones to desktops.</p>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-4 animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="mb-3"><i class="fas fa-chart-line fs-1"></i></div>
+                    <h5 class="fw-semibold">Experience Level Scoring</h5>
+                    <p class="text-muted">No more guessing if "2 years" is enough. Get precise experience level matching
+                        against your job requirements with confidence scores.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">User Friendly</h5>
-                            <p class="card-text">Simple and intuitive interface that users love to explore.</p>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-4 animate__animated animate__fadeInUp" style="animation-delay: 0.6s;">
+                <div class="card h-100 border-0 shadow-sm text-center">
+                    <div class="mb-3"><i class="fas fa-filter fs-1"></i></div>
+                    <h5 class="fw-semibold">Instant Filtering</h5>
+                    <p class="text-muted">Stop reading 100+ resumes. Set your criteria once and get only candidates who
+                        meet your minimum requirements for location, salary, and skills.</p>
                 </div>
             </div>
         </div>
-    </section>
-    {%endblock%}
+    </div>
+</section>
 
+<!-- How It Works -->
+<section id="features" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5 animate__animated animate__fadeIn">
+            <h2 class="fw-bold display-5">From Job Post to Shortlist in 3 Steps</h2>
+            <p class="text-muted lead">No complex setup. No training required. Just results.</p>
+        </div>
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-4 animate__animated animate__fadeInLeft">
+                <div class="bg-white p-4 rounded-3 shadow-sm border">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-upload text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-semibold mb-1">1. Upload & Post</h4>
+                            <span class="badge bg-success bg-opacity-10 text-success">30 seconds</span>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li>Post your job description</li>
+                        <li>Upload resume files (PDF, DOC)</li>
+                        <li>Set your must-have criteria</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <div class="bg-white p-4 rounded-3 shadow-sm border">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-robot text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-semibold mb-1">2. AI Analysis</h4>
+                            <span class="badge bg-warning bg-opacity-10 text-warning">2 minutes</span>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li>AI reads every resume completely</li>
+                        <li>Matches skills to job requirements</li>
+                        <li>Scores experience and qualifications</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 animate__animated animate__fadeInRight" style="animation-delay: 0.4s;">
+                <div class="bg-white p-4 rounded-3 shadow-sm border">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                            <i class="fas fa-list-ol text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-semibold mb-1">3. Ranked Results</h4>
+                            <span class="badge bg-success bg-opacity-10 text-success">Instant</span>
+                        </div>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li>Get top candidates ranked by fit</li>
+                        <li>See detailed match explanations</li>
+                        <li>Export shortlist for interviews</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="animate__animated animate__fadeIn">What Hiring Managers Say</h2>
+        </div>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <blockquote class="blockquote text-center animate__animated animate__fadeInUp">
+                        <p>"We went from spending 3 hours per position to 15 minutes. The AI caught qualified candidates we would have missed in manual screening."</p>
+                        <footer class="blockquote-footer mt-3">
+                            Sarah Chen, <cite title="Source Title">Head of Talent at TechCorp</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="carousel-item">
+                    <blockquote class="blockquote text-center animate__animated animate__fadeInUp">
+                        <p>"Finally, a tool that actually understands what we're looking for. The match quality is incredible - our interview-to-hire rate doubled."</p>
+                        <footer class="blockquote-footer mt-3">
+                            Marcus Rodriguez, <cite title="Source Title">VP Engineering at StartupXYZ</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+                <div class="carousel-item">
+                    <blockquote class="blockquote text-center animate__animated animate__fadeInUp">
+                        <p>"I was skeptical about AI for hiring, but this tool is different. It finds patterns I miss and explains its reasoning clearly."</p>
+                        <footer class="blockquote-footer mt-3">
+                            Jennifer Park, <cite title="Source Title">HR Director at MegaCorp</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+    <div class="container text-center animate__animated animate__pulse">
+        <h3 class="mb-4">Ready to Transform Your Hiring Process?</h3>
+        <p class="mb-4 text-white-50 fs-5">Join 2,800+ hiring managers who've already made the switch</p>
+        <a href="job/" class="btn btn-lg">Start Screening Resumes Now</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 mb-4">
+                <h5 class="mb-3">ResumeRanker</h5>
+                <p class="mb-3">AI-powered resume screening that finds the right candidates faster than ever before.</p>
+                <p class="mb-0">Built for modern hiring teams who value efficiency and quality.</p>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="mb-3">Product</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#testimonials">Reviews</a></li>
+                    <li><a href="job/">Try It Free</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="mb-3">Company</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#blog">Blog</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="mb-3">Support</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#api">API Docs</a></li>
+                    <li><a href="#status">Status</a></li>
+                    <li><a href="#security">Security</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="mb-3">Legal</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#privacy">Privacy Policy</a></li>
+                    <li><a href="#terms">Terms of Service</a></li>
+                    <li><a href="#cookies">Cookie Policy</a></li>
+                    <li><a href="#gdpr">GDPR</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <small>&copy; 2024 ResumeRanker. All rights reserved.</small>
+            </div>
+            <div class="col-md-6 text-end">
+                <small>Made with ❤️ for hiring teams worldwide</small>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Intersection Observer for scroll animations
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('animate__fadeInUp');
+        }
+    });
+}, observerOptions);
+
+// Observe all feature cards
+document.querySelectorAll('#features .card').forEach(card => {
+    observer.observe(card);
+});
+
+// Parallax effect for hero section
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const parallaxElements = document.querySelectorAll('.rr-floating-circle, .rr-floating-pill');
+    
+    parallaxElements.forEach(element => {
+        const speed = element.classList.contains('rr-floating-circle') ? 0.5 : 0.3;
+        element.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+});
+
+// Auto-advance carousel
+const carousel = document.querySelector('#testimonialCarousel');
+if (carousel) {
+    const bootstrapCarousel = new bootstrap.Carousel(carousel, {
+        interval: 5000,
+        wrap: true
+    });
+}
+</script>
+{% endblock %}

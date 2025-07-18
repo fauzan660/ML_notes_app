@@ -7,13 +7,280 @@
 {% block extra_css %}
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<style>
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        min-height: 100vh;
+    }
+
+    .main-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .progress-indicator {
+        height: 3px;
+        background: #e2e8f0;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+        transition: width 0.5s ease;
+        border-radius: 2px;
+    }
+
+    .step-header {
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .step-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .step-subtitle {
+        color: #64748b;
+        font-weight: 400;
+        font-size: 0.95rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #374151;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background: rgba(255, 255, 255, 0.8);
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: white;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-outline-secondary {
+        border: 1px solid #d1d5db;
+        color: #6b7280;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        background: white;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 2rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-outline-primary {
+        border: 1px solid #3b82f6;
+        color: #3b82f6;
+        background: white;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary.active {
+        background: #3b82f6;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .experience-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .experience-buttons .btn {
+        flex: 1;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+    }
+
+    .list-group-item {
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 2px;
+        transition: all 0.2s ease;
+    }
+
+    .list-group-item:hover {
+        background: #f8fafc;
+        cursor: pointer;
+    }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .summary-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-label {
+        font-weight: 600;
+        color: #3b82f6;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-value {
+        color: #374151;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    .skill-tag {
+        background: #3b82f6;
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .generate-btn {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .generate-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .skills-section {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .skills-section h6 {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light"
-    x-data="{
+<div class="min-vh-100 d-flex align-items-center justify-content-center py-5" x-data="{
     step: 1,
     title: '',
     description: '',
@@ -36,27 +303,27 @@
     max_experience: '',
     country: '',
     city: '',
-    ai_skills: [], // populated from AI
-    user_skill: '', // input for user typing
-    final_skills: [], // combined list
+    ai_skills: [],
+    user_skill: '',
+    final_skills: [],
     countries: JSON.parse('{{ countries|escapejs }}'),
     citiesByCountry: JSON.parse('{{ cities_by_country|escapejs }}'),
     cities: [],
     updateCities() {
-    this.cities = this.citiesByCountry[this.country] || [];
-    this.city = '';
+        this.cities = this.citiesByCountry[this.country] || [];
+        this.city = '';
     }, 
     generateDescription() {
         let jobData = {
-        job_title: this.title,
-        job_type: this.type,
-        work_mode: this.mode,
-        industry: this.industry,
-        experience_level: this.experience,
-        min_experience: this.min_experience,
-        max_experience: this.max_experience,
-        country: this.country,
-        city: this.city,
+            job_title: this.title,
+            job_type: this.type,
+            work_mode: this.mode,
+            industry: this.industry,
+            experience_level: this.experience,
+            min_experience: this.min_experience,
+            max_experience: this.max_experience,
+            country: this.country,
+            city: this.city,
         };
         fetch('/job/generate_description/', {
             method: 'POST',
@@ -65,307 +332,377 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(jobData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            let parsed = JSON.parse(data.description);
+            let values = Object.values(parsed);
             
-    })
-    .then(response => response.json())
-    .then(data => {
-    let parsed = JSON.parse(data.description);
-    let values = Object.values(parsed);
-    
-    this.fullText = values[0]; // First item = job description
-    this.description = '';
-    this.ai_skills = values[1] || [];
-    this.final_skills = [...this.ai_skills];
-    this.index = 0;
-    this.typeWriter();
-    });
+            this.fullText = values[0];
+            this.description = '';
+            this.ai_skills = values[1] || [];
+            this.final_skills = [...this.ai_skills];
+            this.index = 0;
+            this.typeWriter();
+        });
     },
     
     typeWriter() {
-    if (this.index < this.fullText.length) { this.description +=this.fullText[this.index++]; setTimeout(()=>
-        this.typeWriter(), 20);
+        if (this.index < this.fullText.length) { 
+            this.description += this.fullText[this.index++]; 
+            setTimeout(() => this.typeWriter(), 20);
         }
-        }
-
+    }
 }">
 
-    <div class="card shadow-lg p-4 p-md-5 rounded-4 w-100" style="max-width: 720px;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="main-card p-4 p-md-5">
 
-        <!-- Header -->
-        <div class="text-center mb-4">
-            <h2 class="fw-bold mb-2">🚀 Post a Job</h2>
-            <div class="d-flex justify-content-center gap-2">
-                <template x-for="n in 5">
-                    <div class="rounded-pill" :class="step === n ? 'bg-primary' : 'bg-secondary'"
-                        style="width: 10px; height: 10px;"></div>
-                </template>
+                    <!-- Progress Bar -->
+                    <div class="progress-indicator">
+                        <div class="progress-bar" :style="`width: ${(step / 7) * 100}%`"></div>
+                    </div>
+
+                    <!-- Form -->
+                    <form method="POST" x-ref="form">
+                        {% csrf_token %}
+
+                        <!-- Step 1: Job Title -->
+                        <div x-show="step === 1" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">What's the job title?</h1>
+                                <p class="step-subtitle">Start by giving your job posting a clear, descriptive title</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Job Title</label>
+                                <input type="text" class="form-control" name="job_title" x-model="title"
+                                    placeholder="e.g. Senior Frontend Developer" required>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <div></div>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Job Type & Work Mode -->
+                        <div x-show="step === 2" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Job details</h1>
+                                <p class="step-subtitle">Specify the type of position and work arrangement</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Job Type</label>
+                                <select class="form-select" name="job_type" x-model="type" required>
+                                    <option value="" disabled selected>Select job type</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="Part-time">Part-time</option>
+                                    <option value="Contract">Contract</option>
+                                    <option value="Internship">Internship</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-4"
+                                x-show="type === 'Full-time' || type === 'Part-time' || type === 'Contract' || type === 'Internship'">
+                                <label class="form-label">Work Mode</label>
+                                <select class="form-select" name="work_mode" x-model="mode">
+                                    <option value="" disabled selected>Select work mode</option>
+                                    <option value="Remote">Remote</option>
+                                    <option value="On-site">On-site</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                </select>
+                            </div>
+
+                            <div x-show="mode === 'On-site' || mode === 'Hybrid'">
+                                <div class="mb-4">
+                                    <label class="form-label">Country</label>
+                                    <select class="form-select" name="country" x-model="country" @change="updateCities">
+                                        <option value="" disabled selected>Select Country</option>
+                                        <template x-for="c in countries" :key="c">
+                                            <option :value="c" x-text="c"></option>
+                                        </template>
+                                    </select>
+                                </div>
+
+                                <div class="mb-4" x-show="cities.length > 0">
+                                    <label class="form-label">City</label>
+                                    <select class="form-select" name="city" x-model="city">
+                                        <option value="" disabled selected>Select City</option>
+                                        <template x-for="ct in cities" :key="ct">
+                                            <option :value="ct" x-text="ct"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Industry -->
+                        <div x-show="step === 3" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Industry</h1>
+                                <p class="step-subtitle">What industry does this role belong to?</p>
+                            </div>
+
+                            <div class="mb-4 position-relative">
+                                <label class="form-label">Industry</label>
+                                <input type="text" class="form-control" name="industry" x-model="industry"
+                                    @input="updateSuggestions" autocomplete="off"
+                                    placeholder="Start typing an industry..." required>
+
+                                <ul class="list-group position-absolute w-100 shadow-sm mt-1" style="z-index: 1000;"
+                                    x-show="filteredIndustries.length > 0">
+                                    <template x-for="option in filteredIndustries" :key="option">
+                                        <li @click="selectIndustry(option)"
+                                            class="list-group-item list-group-item-action" x-text="option"></li>
+                                    </template>
+                                </ul>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Experience Level -->
+                        <div x-show="step === 4" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Experience level</h1>
+                                <p class="step-subtitle">What level of experience are you looking for?</p>
+                            </div>
+
+                            <input type="hidden" name="experience_level" x-model="experience">
+
+                            <div class="experience-buttons">
+                                <button type="button" class="btn btn-outline-primary"
+                                    :class="experience === 'Entry-Level' ? 'active' : ''"
+                                    @click="experience = 'Entry-Level'">
+                                    Entry-Level
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                    :class="experience === 'Mid-Level' ? 'active' : ''"
+                                    @click="experience = 'Mid-Level'">
+                                    Mid-Level
+                                </button>
+                                <button type="button" class="btn btn-outline-primary"
+                                    :class="experience === 'Senior-Level' ? 'active' : ''"
+                                    @click="experience = 'Senior-Level'">
+                                    Senior-Level
+                                </button>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Experience Range (Years)</label>
+                                <div class="row g-3">
+                                    <div class="col">
+                                        <input type="number" name="min_experience" class="form-control" min="0" max="10"
+                                            placeholder="Min years" x-model="min_experience">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" name="max_experience" class="form-control" min="0" max="10"
+                                            placeholder="Max years" x-model="max_experience">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Job Description -->
+                        <div x-show="step === 5" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Job description</h1>
+                                <p class="step-subtitle">Describe what the role involves and what makes it exciting</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Job Description</label>
+                                <textarea class="form-control" name="job_description" x-model="description" rows="6"
+                                    placeholder="Describe the role, responsibilities, and what makes it exciting..."
+                                    required></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <button type="button" class="generate-btn" @click="generateDescription">
+                                    ✨ Generate with AI
+                                </button>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Continue
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Skills -->
+                        <div x-show="step === 6" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Required skills</h1>
+                                <p class="step-subtitle">Select the skills candidates need for this role</p>
+                            </div>
+
+                            <!-- AI Skills Section -->
+                            <div class="skills-section" x-show="ai_skills.length > 0">
+                                <h6>AI Suggested Skills</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <template x-for="skill in ai_skills" :key="skill">
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                            :class="final_skills.includes(skill) ? 'active' : ''" @click="final_skills.includes(skill) 
+                                                ? final_skills = final_skills.filter(s => s !== skill) 
+                                                : final_skills.push(skill)">
+                                            <span x-text="skill"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Manual Input Section -->
+                            <div class="skills-section">
+                                <h6>Add Custom Skills</h6>
+                                <input type="text" x-model="user_skill" class="form-control"
+                                    placeholder="Type a skill and press Enter" @keydown.enter.prevent="
+                                        if (user_skill.trim() && !final_skills.includes(user_skill.trim())) {
+                                            final_skills.push(user_skill.trim());
+                                            user_skill = '';
+                                        }
+                                    ">
+                            </div>
+
+                            <!-- Final Skills Display -->
+                            <div class="mb-4" x-show="final_skills.length > 0">
+                                <h6 class="mb-3">Selected Skills</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <template x-for="skill in final_skills" :key="skill">
+                                        <span class="skill-tag">
+                                            <span x-text="skill"></span>
+                                            <button type="button" class="btn-close btn-close-white"
+                                                @click="final_skills = final_skills.filter(s => s !== skill)">
+                                            </button>
+                                        </span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="extracted_skills" :value="JSON.stringify(final_skills)">
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary" @click="step++">
+                                    Review
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 7: Summary -->
+                        <div x-show="step === 7" x-transition class="fade-in">
+                            <div class="step-header">
+                                <h1 class="step-title">Review & submit</h1>
+                                <p class="step-subtitle">Please review your job posting before submitting</p>
+                            </div>
+
+                            <div class="summary-card">
+                                <h6 class="summary-label">Job Title</h6>
+                                <p class="summary-value" x-text="title || 'Not provided'"></p>
+                            </div>
+
+                            <div class="summary-card">
+                                <h6 class="summary-label">Industry</h6>
+                                <p class="summary-value" x-text="industry || 'Not provided'"></p>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="summary-card h-100">
+                                        <h6 class="summary-label">Job Type</h6>
+                                        <p class="summary-value" x-text="type || 'Not provided'"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="summary-card h-100">
+                                        <h6 class="summary-label">Work Mode</h6>
+                                        <p class="summary-value" x-text="mode || 'Not provided'"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <div class="summary-card h-100">
+                                        <h6 class="summary-label">Experience Level</h6>
+                                        <p class="summary-value" x-text="experience || 'Not provided'"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="summary-card h-100">
+                                        <h6 class="summary-label">Years Range</h6>
+                                        <p class="summary-value">
+                                            <span x-text="min_experience || '0'"></span> -
+                                            <span x-text="max_experience || '0'"></span> years
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="summary-card">
+                                <h6 class="summary-label">Job Description</h6>
+                                <p class="summary-value" x-text="description || 'No description provided'"></p>
+                            </div>
+
+                            <div class="summary-card">
+                                <h6 class="summary-label">Required Skills</h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <template x-for="skill in final_skills" :key="skill">
+                                        <span class="badge bg-primary" x-text="skill"></span>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <div class="navigation-buttons">
+                                <button type="button" class="btn btn-outline-secondary" @click="step--">
+                                    Back
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    Submit Job Post
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
             </div>
         </div>
-
-        <!-- Form -->
-        <form method="POST" x-ref="form">
-            {% csrf_token %}
-
-            <!-- Step 1: Title -->
-            <div x-show="step === 1" x-transition>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">📝 Job Title</label>
-                    <input type="text" class="form-control form-control-lg rounded-3" name="job_title" x-model="title"
-                        placeholder="e.g. Frontend Developer" required>
-                </div>
-                <div class="d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
-                </div>
-            </div>
-
-            <!-- Step 2: Description -->
-            
-
-            <!-- Step 3: Type -->
-            <div x-show="step === 2" x-transition>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">📦 Job Type</label>
-                    <select class="form-select form-select-lg rounded-3" name="job_type" x-model="type" required>
-                        <option value="" disabled selected>Select job type</option>
-                        <option value="Full-time">Full-time</option>
-                        <option value="Part-time">Part-time</option>
-                        <option value="Contract">Contract</option>
-                        <option value="Internship">Internship</option>
-                    </select>
-                </div>
-                <div class="mb-3" x-show="type === 'Full-time' || type === 'Part-time' || type === 'Contract' || type === 'Internship'">
-                    <label class="form-label fw-semibold">🏠 Work Mode</label>
-                    <select class="form-select form-select-lg rounded-3" name="work_mode" x-model="mode">
-                        <option value="" disabled selected>Select work mode</option>
-                        <option value="Remote">Remote</option>
-                        <option value="On-site">On-site</option>
-                        <option value="Hybrid">Hybrid</option>
-                    </select>
-                </div>
-                <div  x-show="mode === 'On-site' || mode === 'Hybrid'">
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">🌎 Country</label>
-                        <select class="form-select form-select-lg rounded-3" name="country" x-model="country" @change="updateCities">
-                            <option value="" disabled selected>Select Country</option>
-                            <template x-for="c in countries" :key="c">
-                                <option :value="c" x-text="c"></option>
-                            </template>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3" x-show="cities.length > 0">
-                        <label class="form-label fw-semibold">🏙️ City</label>
-                        <select class="form-select form-select-lg rounded-3" name="city" x-model="city">
-                            <option value="" disabled selected>Select City</option>
-                            <template x-for="ct in cities" :key="ct">
-                                <option :value="ct" x-text="ct"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                </div>
-                
-
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
-                </div>
-            </div>
-
-            <!-- Step 4: Industry -->
-            <div x-show="step === 3" x-transition>
-                <div class="mb-3 position-relative">
-                    <label class="form-label fw-semibold">🏢 Industry</label>
-                    <input type="text" class="form-control form-control-lg rounded-3" name="industry" x-model="industry"
-                        @input="updateSuggestions" autocomplete="off" placeholder="Start typing an industry..." required>
-            
-                    <ul class="list-group position-absolute w-100 shadow-sm mt-1" style="z-index: 1000;"
-                        x-show="filteredIndustries.length > 0">
-                        <template x-for="option in filteredIndustries" :key="option">
-                            <li @click="selectIndustry(option)" class="list-group-item list-group-item-action" x-text="option"></li>
-                        </template>
-                    </ul>
-                </div>
-            
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Preview →</button>
-                </div>
-            </div>
-            <!-- Step 5: Experience Level & Years -->
-            <div x-show="step === 4" x-transition>
-                <input type="hidden" name="experience_level" x-model="experience">
-                
-                <div class="btn-group d-flex flex-wrap gap-2" role="group">
-                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
-                        :class="experience === 'Entry-Level' ? 'active btn-primary text-white' : ''"
-                        @click="experience = 'Entry-Level'">
-                        🚀 Entry-Level
-                    </button>
-                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
-                        :class="experience === 'Mid-Level' ? 'active btn-primary text-white' : ''" @click="experience = 'Mid-Level'">
-                        💼 Mid-Level
-                    </button>
-                    <button type="button" class="btn btn-outline-primary rounded-pill flex-fill"
-                        :class="experience === 'Senior-Level' ? 'active btn-primary text-white' : ''"
-                        @click="experience = 'Senior-Level'">
-                        🏆 Senior-Level
-                    </button>
-                </div>
-            
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">📆 Expected Experience Range (Years)</label>
-                    <div class="row">
-                        <div class="col">
-                            <input type="number" name="min_experience" class="form-control form-control-lg rounded-3" min="0" max="10"
-                                placeholder="Min Years" x-model="min_experience">
-                        </div>
-                        <div class="col">
-                            <input type="number" name="max_experience" class="form-control form-control-lg rounded-3" min="0" max="10"
-                                placeholder="Max Years" x-model="max_experience">
-                        </div>
-                    </div>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
-                </div>
-            </div>
-
-            <div x-show="step === 5" x-transition>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">💬 Job Description</label>
-                    <textarea class="form-control form-control-lg rounded-3" name="job_description" x-model="description" rows="5"
-                        placeholder="What will they do? What makes the job exciting?" required></textarea>
-                </div>
-                <button type="button" class="btn btn-outline-secondary rounded-pill" @click="generateDescription">✨Generate</button>
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
-                </div>
-            </div>
-            <div x-show="step === 6" x-transition>
-                <h4 class="fw-bold mb-4 text-center">🎯 Required Skills</h4>
-            
-                <!-- AI Skills Section -->
-                <div class="mb-4">
-                    <h6 class="fw-semibold">✨ AI Suggested Skills:</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <template x-for="skill in ai_skills" :key="skill">
-                            <button type="button" class="btn btn-sm rounded-pill" :class="final_skills.includes(skill) 
-                                        ? 'btn-primary text-white' 
-                                        : 'btn-outline-primary'" @click="final_skills.includes(skill) 
-                                        ? final_skills = final_skills.filter(s => s !== skill) 
-                                        : final_skills.push(skill)">
-                                <span x-text="skill"></span>
-                            </button>
-                        </template>
-                    </div>
-                </div>
-            
-                <!-- Manual Input Section -->
-                <div class="mb-4">
-                    <h6 class="fw-semibold">➕ Add Your Own Skills:</h6>
-                    <input type="text" x-model="user_skill" class="form-control rounded-pill"
-                        placeholder="Type a skill and press Enter" @keydown.enter.prevent="
-                            if (user_skill.trim() && !final_skills.includes(user_skill.trim())) {
-                                final_skills.push(user_skill.trim());
-                                user_skill = '';
-                            }
-                        ">
-                </div>
-            
-                <!-- Final Skills Tags -->
-                <div class="mb-4">
-                    <h6 class="fw-semibold">✅ Your Final Skills:</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <template x-for="skill in final_skills" :key="skill">
-                            <span class="badge rounded-pill bg-primary text-white d-inline-flex align-items-center">
-                                <span x-text="skill"></span>
-                                <button type="button" class="btn-close btn-close-white ms-2"
-                                    @click="final_skills = final_skills.filter(s => s !== skill)">
-                                </button>
-                            </span>
-                        </template>
-                    </div>
-                </div>
-            
-                <input type="hidden" name="extracted_skills" :value="JSON.stringify(final_skills)">
-            
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="button" class="btn btn-primary px-4 rounded-pill" @click="step++">Next →</button>
-                </div>
-            </div>
-
-            <!-- Step 5: Summary -->
-            <div x-show="step === 7" x-transition>
-                <h4 class="fw-bold mb-4 text-center">📄 Final Job Summary</h4>
-            
-                <div class="border rounded-4 p-3 mb-3 bg-light">
-                    <h6 class="fw-bold mb-1 text-primary">Job Title</h6>
-                    <p class="mb-0 text-muted" x-text="title || 'Not provided'"></p>
-                </div>
-            
-                <div class="border rounded-4 p-3 mb-3 bg-light">
-                    <h6 class="fw-bold mb-1 text-primary">Industry</h6>
-                    <p class="mb-0 text-muted" x-text="industry || 'Not provided'"></p>
-                </div>
-            
-                <div class="row g-3 mb-3">
-                    <div class="col">
-                        <div class="border rounded-4 p-3 bg-light h-100">
-                            <h6 class="fw-bold mb-1 text-primary">Job Type</h6>
-                            <p class="mb-0 text-muted" x-text="type || 'Not provided'"></p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="border rounded-4 p-3 bg-light h-100">
-                            <h6 class="fw-bold mb-1 text-primary">Work Mode</h6>
-                            <p class="mb-0 text-muted" x-text="mode || 'Not provided'"></p>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="row g-3 mb-3">
-                    <div class="col">
-                        <div class="border rounded-4 p-3 bg-light h-100">
-                            <h6 class="fw-bold mb-1 text-primary">Experience Level</h6>
-                            <p class="mb-0 text-muted" x-text="experience || 'Not provided'"></p>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="border rounded-4 p-3 bg-light h-100">
-                            <h6 class="fw-bold mb-1 text-primary">Years (Range)</h6>
-                            <p class="mb-0 text-muted">
-                                <span x-text="min_experience || '0'"></span> - <span x-text="max_experience || '0'"></span> Years
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            
-                <div class="border rounded-4 p-3 mb-3 bg-light">
-                    <h6 class="fw-bold mb-1 text-primary">Job Description</h6>
-                    <p class="mb-0 text-muted" x-text="description || 'No description provided yet.'"></p>
-                </div>
-            
-                <div class="border rounded-4 p-3 mb-3 bg-light">
-                    <h6 class="fw-bold mb-1 text-primary">Final Skills Selected</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <template x-for="skill in final_skills" :key="skill">
-                            <span class="badge bg-primary rounded-pill text-white" x-text="skill"></span>
-                        </template>
-                    </div>
-                </div>
-            
-                <div class="d-flex justify-content-between mt-4">
-                    <button type="button" class="btn btn-outline-secondary rounded-pill" @click="step--">← Back</button>
-                    <button type="submit" class="btn btn-success px-4 rounded-pill">✅ Confirm & Submit</button>
-                </div>
-            </div>
-
-        </form>
-
     </div>
 </div>
 {% endblock %}

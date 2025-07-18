@@ -7,178 +7,557 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'notes/css/resume_detail.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
     :root {
-        --primary-color: #6c63ff;
-        --secondary-color: #4d44db;
-        --light-bg: #f8f9fa;
-        --dark-text: #2c3e50;
-        --light-text: #7f8c8d;
-        --success-color: #2ecc71;
+        --primary-color: #2563eb;
+        --primary-hover: #1d4ed8;
+        --secondary-color: #1e40af;
+        --accent-color: #0ea5e9;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+        --error-color: #ef4444;
+
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+
+        --border-radius-sm: 6px;
         --border-radius: 12px;
-        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        --border-radius-lg: 16px;
+        --border-radius-xl: 24px;
+
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+        --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-        background-color: #f5f7fb;
-        color: var(--dark-text);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
+        color: var(--gray-800);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
     }
-    
+
     .dashboard-container {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); /* Equal width columns that won't shrink */
+        grid-template-columns: 1fr 400px;
         gap: 2rem;
         max-width: 1400px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-        align-items: start; /* Align items at the top */
+        margin: 0 auto;
+        padding: 2rem 1rem;
+        min-height: 100vh;
     }
-    
-    .job-card, .upload-card, .results-card {
+
+    .card {
         background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--gray-200);
+        transition: var(--transition);
+        overflow: hidden;
+    }
+
+    .card:hover {
+        box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--gray-200);
+        background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
+    }
+
+    .card-body {
         padding: 2rem;
+    }
+
+    .job-card {
         margin-bottom: 2rem;
     }
-    
-    .job-header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        padding-bottom: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    
+
     .job-title {
-        color: var(--primary-color);
+        font-size: 2rem;
         font-weight: 700;
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
+        color: var(--gray-900);
+        margin: 0 0 1rem 0;
+        line-height: 1.2;
     }
-    
+
+    .job-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .job-type {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-xl);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: var(--shadow-sm);
+    }
+
     .job-description {
-        color: var(--dark-text);
-        line-height: 1.6;
+        color: var(--gray-700);
+        line-height: 1.7;
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .skills-section {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .skills-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .skills-title::before {
+        content: "💡";
+        font-size: 1.25rem;
+    }
+
+    .skills-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .skill-pill {
+        background: linear-gradient(135deg, var(--gray-100), var(--gray-200));
+        color: var(--gray-700);
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-xl);
+        font-size: 0.875rem;
+        font-weight: 500;
+        border: 1px solid var(--gray-300);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-pill::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .skill-pill:hover {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .skill-pill:hover::before {
+        left: 100%;
+    }
+
+    .upload-card {
+        margin-bottom: 2rem;
+    }
+
+    .upload-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
         margin-bottom: 1.5rem;
     }
-    
-    .job-type {
-        display: inline-block;
-        background: #e0e7ff;
-        color: var(--secondary-color);
-        padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    
-    .upload-form {
-        margin-top: 1.5rem;
-    }
-    
-    .form-label {
+
+    .upload-header h3 {
+        font-size: 1.25rem;
         font-weight: 600;
-        color: var(--dark-text);
-        margin-bottom: 0.5rem;
-        display: block;
+        color: var(--gray-900);
+        margin: 0;
     }
-    
-    .form-control {
-        border: 2px solid #e2e8f0;
-        border-radius: var(--border-radius);
-        padding: 0.8rem 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-    }
-    
-    .btn-purple {
-        background-color: var(--primary-color);
+
+    .upload-icon {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
         color: white;
-        border: none;
-        padding: 0.8rem 1.5rem;
+        padding: 0.5rem;
         border-radius: var(--border-radius);
-        font-weight: 600;
-        transition: all 0.3s ease;
+        font-size: 1.25rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid var(--gray-300);
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        transition: var(--transition);
+        background: white;
+        color: var(--gray-800);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-text {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+        color: white;
+        box-shadow: var(--shadow-sm);
         width: 100%;
     }
-    
-    .btn-purple:hover {
-        background-color: var(--secondary-color);
-        transform: translateY(-2px);
+
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
     }
-    
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
     .results-card {
-        height: calc(100vh - 200px); /* Set a fixed height with some breathing room */
-        overflow-y: auto; /* Make it scrollable */
         position: sticky;
-        top: 20px; /* Stick to the top with some margin */
+        top: 2rem;
+        height: calc(100vh - 4rem);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
-    
+
+    .results-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0;
+    }
+
+    .results-header h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin: 0;
+    }
+
+    .results-icon {
+        background: linear-gradient(135deg, var(--success-color), #0ea5e9);
+        color: white;
+        padding: 0.5rem;
+        border-radius: var(--border-radius);
+        font-size: 1.25rem;
+    }
+
+    .results-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem 0;
+    }
+
+    .results-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .results-content::-webkit-scrollbar-track {
+        background: var(--gray-100);
+        border-radius: 3px;
+    }
+
+    .results-content::-webkit-scrollbar-thumb {
+        background: var(--gray-300);
+        border-radius: 3px;
+    }
+
+    .results-content::-webkit-scrollbar-thumb:hover {
+        background: var(--gray-400);
+    }
+
     .score-section {
-        background: var(--light-bg);
+        background: linear-gradient(135deg, var(--gray-50), white);
+        border: 1px solid var(--gray-200);
         border-radius: var(--border-radius);
         padding: 1.5rem;
         margin-bottom: 1rem;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
+        transition: var(--transition);
+        position: relative;
     }
-    
+
+    .score-section:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+    }
+
     .score-title {
-        color: var(--secondary-color);
-        font-size: 1.0rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--gray-900);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .score-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.875rem;
+        padding: 0.375rem 0.75rem;
+        border-radius: var(--border-radius-sm);
+        transition: var(--transition);
+        background: rgba(37, 99, 235, 0.1);
+        margin-bottom: 0.75rem;
+    }
+
+    .score-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateX(2px);
+    }
+
+    .stars {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--gray-600);
+    }
+
+    .star-rating {
+        color: var(--warning-color);
+        font-size: 1.25rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--gray-500);
+    }
+
+    .empty-image {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1.5rem;
+        opacity: 0.8;
+    }
+
+    .empty-state h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gray-700);
         margin-bottom: 0.5rem;
     }
-    
-    .stars {
-        color: #f39c12;
-        font-size: 1.5rem;
-        font-weight: bold;
+
+    .empty-state p {
+        color: var(--gray-500);
+        margin: 0;
     }
-    
-    /* Responsive adjustments */
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .dashboard-container {
+            grid-template-columns: 1fr 350px;
+        }
+    }
+
     @media (max-width: 992px) {
         .dashboard-container {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .results-card {
+            position: static;
+            height: auto;
+        }
+
+        .results-content {
+            max-height: 500px;
         }
     }
-    .skills-section {
-    margin-top: 1.5rem;
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 1rem;
         }
 
-.skills-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--secondary-color);
-}
+        .card-body {
+            padding: 1.5rem;
+        }
 
-.skills-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
+        .card-header {
+            padding: 1rem 1.5rem;
+        }
 
-.skill-pill {
-    background-color: #e8edff;
-    color: var(--primary-color);
-    padding: 0.4rem 0.9rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease-in-out;
-}
+        .job-title {
+            font-size: 1.5rem;
+        }
 
-.skill-pill:hover {
-    background-color: var(--primary-color);
-    color: white;
-    cursor: default;
-}
+        .job-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
 
+        .skills-tags {
+            gap: 0.5rem;
+        }
+
+        .skill-pill {
+            font-size: 0.75rem;
+            padding: 0.375rem 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-container {
+            padding: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .card-header {
+            padding: 0.75rem 1rem;
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+        }
+    }
+
+    /* Loading states */
+    .loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+    .loading .btn-primary {
+        background: var(--gray-400);
+    }
+
+    /* Focus states for accessibility */
+    .btn:focus,
+    .form-control:focus,
+    .score-link:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        :root {
+            --primary-color: #1e40af;
+            --gray-300: #a1a1aa;
+            --gray-600: #52525b;
+        }
+
+        .card {
+            border-width: 2px;
+        }
+
+        .skill-pill {
+            border-width: 2px;
+        }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -187,63 +566,96 @@
     <!-- Left Column -->
     <div class="left-column">
         <!-- Job Details Card -->
-        <div class="job-card">
-            <div class="job-header">
+        <div class="card job-card">
+            <div class="card-header">
                 <h1 class="job-title">{{ job.job_title }}</h1>
-                <div class="job-type">{{ job.job_type }}</div>
+                <div class="job-meta">
+                    <div class="job-type">{{ job.job_type }}</div>
+                </div>
             </div>
-            <p class="job-description">{{ job.job_description }}</p>
-            {% if job.extracted_skills %}
+            <div class="card-body">
+                <p class="job-description">{{ job.job_description }}</p>
+                {% if job.extracted_skills %}
                 <div class="skills-section">
                     <h4 class="skills-title">Required Skills</h4>
                     <div class="skills-tags">
                         {% for skill in job.extracted_skills %}
-                            <span class="skill-pill">{{ skill }}</span>
+                        <span class="skill-pill">{{ skill }}</span>
                         {% endfor %}
                     </div>
                 </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
-        
+
         <!-- Resume Upload Card -->
-        <div class="upload-card">
-            <h3>Upload Resumes</h3>
-            <form method="post" enctype="multipart/form-data" class="upload-form">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="resumeFileInput" class="form-label">Select Resume Files</label>
-                    <input class="form-control" type="file" id="resumeFileInput" name="resume_file" multiple>
-                    <small class="form-text text-muted">Supported formats: PDF, DOCX (Max 10MB each)</small>
+        <div class="card upload-card">
+            <div class="card-header">
+                <div class="upload-header">
+                    <div class="upload-icon">📄</div>
+                    <h3>Upload Resumes</h3>
                 </div>
-                <button type="submit" id="load-btn" class="btn btn-purple">
-                    <i class="fas fa-cloud-upload-alt"></i> Upload & Process
-                </button>
-            </form>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" class="upload-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="resumeFileInput" class="form-label">Select Resume Files</label>
+                        <input class="form-control" type="file" id="resumeFileInput" name="resume_file" multiple
+                            accept=".pdf,.docx">
+                        <div class="form-text">Supported formats: PDF, DOCX (Max 10MB each)</div>
+                    </div>
+                    <button type="submit" id="load-btn" class="btn btn-primary">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        Upload & Process
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-    
+
     <!-- Right Column - Results -->
-     <div class="right-column">
-        <div class="results-card">
-            <h2>Analysis Results</h2>
-            <div class="results-content">
-                {% if score %}
+    <div class="right-column">
+        <div class="card results-card">
+            <div class="card-header">
+                <div class="results-header">
+                    <div class="results-icon">📊</div>
+                    <h2>Analysis Results</h2>
+                </div>
+            </div>
+            <div class="card-body" style="padding: 0; flex: 1; display: flex; flex-direction: column;">
+                <div class="results-content" style="padding: 1.5rem;">
+                    {% if score %}
                     {% for key, value in score.items %}
                     <div class="score-section">
                         <h4 class="score-title">{{ key }}</h4>
-                        <a href="{% url 'resume_dashboard' job.id value.1 %}"> click here to analyze</a>
+                        <a href="{% url 'resume_dashboard' job.id value.1 %}" class="score-link">
+                            <i class="fas fa-chart-line"></i>
+                            View Detailed Analysis
+                        </a>
                         <div class="stars">
-                            ({{ value.0 }} out of 5)
+                            <span class="star-rating">⭐</span>
+                            <span>{{ value.0 }} out of 5</span>
                         </div>
                     </div>
                     {% endfor %}
-                {% else %}
+                    {% else %}
                     <div class="empty-state">
-                        <img src="{% static 'notes/images/empty-results.svg' %}" alt="No results yet" class="empty-image">
+                        <div class="empty-image">
+                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="60" cy="60" r="60" fill="#f3f4f6" />
+                                <path d="M40 45h40v30H40z" fill="#e5e7eb" />
+                                <path d="M45 50h10v2H45zm0 4h15v2H45zm0 4h12v2H45z" fill="#9ca3af" />
+                                <circle cx="85" cy="35" r="8" fill="#10b981" />
+                                <path d="M82 35l2 2 4-4" stroke="white" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
                         <h4>No results yet</h4>
                         <p>Upload resumes to see matching analysis</p>
                     </div>
-                {% endif %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -251,4 +663,4 @@
 
 <!-- Font Awesome for icons -->
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-{% endblock %}
+{% endblock %}  
