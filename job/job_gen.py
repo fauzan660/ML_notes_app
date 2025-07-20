@@ -32,7 +32,7 @@ def generate_description(job_title, job_type, work_mode, industry, experience_le
     response = requests.post(
     url="https://openrouter.ai/api/v1/chat/completions",
     headers={
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer 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",
     },
     data=json.dumps({
         "model": "openai/gpt-4o", # Optional
