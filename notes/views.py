@@ -14,6 +14,8 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import JsonResponse, HttpResponse
 from resume_analysis.spacy_resume.spacy_ner import spacy_ner
 from django.contrib.auth.decorators import login_required
+from pyresparser import ResumeParser
+import subprocess
 # Create your views here.
 # def members(request):
 #     template = loader.get_template('notes/resume.html')
@@ -24,18 +26,6 @@ def upload_file(request):
     jobs = PostJobModel.objects.filter(user=request.user)
     total_resume = UploadedFiles.objects.count()
     return render(request, "notes/resume.html", {"jobs":jobs, "total_count": total_resume})
-
-@csrf_exempt
-def spacy_test(request, id):
-    if request.method=="POST":
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = form.cleaned_data['resume_file']
-            print(files)
-            rank_dict = {}
-            score = make_spacy_entities( read_pdf(files[0]))
-                
-            return JsonResponse(score)
         
 @csrf_exempt
 def transformer_test(request, id):
@@ -59,6 +49,9 @@ def transformer_test(request, id):
         
         
 def resume_details(request, id):
+
+    pyres_function = r"C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\Resume\notes\pyres_skill.py"
+    pyres_venv = r"C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\env3.6new\Scripts\python.exe"
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -68,10 +61,31 @@ def resume_details(request, id):
             job_instance = PostJobModel.objects.get(user = request.user, pk=id)
             for each in files:
                 pdf_text = read_pdf(each)
-                ner_results = spacy_ner(pdf_text)
-                instance = UploadedFiles(user = request.user, job=job_instance, file_field=each,extracted_text=pdf_text, extracted_resume_skills=ner_results)
-                
+                # ner_results = spacy_ner(pdf_text)
+                instance = UploadedFiles(user = request.user, job=job_instance, file_field=each,extracted_text=pdf_text)
                 instance.save()
+                
+                file_path = instance.file_field.path
+
+                try:
+                    result = subprocess.run(
+                        [pyres_venv, pyres_function, file_path],
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        universal_newlines=True  # Equivalent to text=True in 3.7+
+                    )
+                    output = result.stdout.strip()  # "Python,Django,Machine Learning"
+                    skills_list = output.split(",")  # ['Python', 'Django', 'Machine Learning']
+                    instance.extracted_resume_skills = skills_list
+                    instance.save()
+                    print("resssss", instance.extracted_resume_skills)
+
+                except subprocess.CalledProcessError as e:
+                    print("Subprocess failed with error:")
+                    print("STDOUT:", e.output)
+                    print("STDERR:", e.stderr)
+
+
                 score = score_calculator(job_instance.job_description, read_pdf(each))
                 # get_ner_from_39_env(each)
                 rank_dict.setdefault(f"{each.name}", []).append(score)

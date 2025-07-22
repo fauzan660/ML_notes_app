@@ -11,7 +11,7 @@ def pdf_highlight(simple_pdf_path, search_terms_list):
     capture_output=True,
     text=True
 )
-
+        print(result.stdout)
         last_line = result.stdout.strip().split("\n")[-1]
         output_path = json.loads(last_line)["output_file"]
         return output_path

@@ -26,6 +26,7 @@ def resume_dashboard(request, job_id, res_id):
         file = UploadedFiles.objects.get(user = request.user, pk = res_id)
         text = file.extracted_text
         ner_results = file.extracted_resume_skills
+        print("ner hello", ner_results)
         simple_pdf_path = file.file_field.path  ## gives absolute path
         simple_pdf_url_absolute = pdf_highlight(simple_pdf_path, ner_results)
         simple_pdf_url_relative = absolute_to_media_url(simple_pdf_url_absolute)
