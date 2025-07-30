@@ -78,7 +78,6 @@ def resume_details(request, id):
                     skills_list = output.split(",")  # ['Python', 'Django', 'Machine Learning']
                     instance.extracted_resume_skills = skills_list
                     instance.save()
-                    print("resssss", instance.extracted_resume_skills)
 
                 except subprocess.CalledProcessError as e:
                     print("Subprocess failed with error:")

@@ -1,0 +1,278 @@
+alias,standard
+js,javascript
+ts,typescript
+html5,html
+css3,css
+scss,css
+react.js,react
+reactjs,react
+vue.js,vue
+vuejs,vue
+nodejs,node.js
+expressjs,express
+express.js,express
+mysql,sql
+postgresql,sql
+sqlite,sql
+mssql,sql
+ml,machine learning
+ai,artificial intelligence
+ds,data science
+cv,computer vision
+nlp,natural language processing
+data viz,data visualization
+pytorch,pytorch
+tensorflow,tensorflow
+keras,keras
+sklearn,scikit-learn
+apache spark,spark
+apache kafka,kafka
+apache hadoop,hadoop
+apache flink,flink
+apache beam,beam
+apache airflow,airflow
+docker container,docker
+helm charts,helm
+aws,amazon web services
+gcp,google cloud platform
+azure,microsoft azure
+ec2,amazon ec2
+s3,amazon s3
+rds,amazon rds
+lambda,aws lambda
+cloudformation,aws cloudformation
+terraform,terraform
+jenkins,jenkins
+circleci,circleci
+travis ci,travis ci
+ansible,ansible
+puppet,puppet
+chef,chef
+prometheus,prometheus
+grafana,grafana
+huggingface,hugging face
+transformers,hugging face transformers
+open cv,open cv
+gpt,gpt
+llm,large language models
+bigquery,google bigquery
+snowflake,snowflake
+redshift,aws redshift
+databricks,databricks
+firebase,firebase
+vs code,visual studio code
+visual studio,visual studio ide
+powerbi,power bi
+gsheets,google spreadsheets
+google sheets,google spreadsheets
+ppt,powerpoint
+xd,adobe xd
+photoshop,adobe photoshop
+illustrator,adobe illustrator
+after effects,adobe after effects
+sass,sass
+less,less
+redux,redux
+bootstrap,bootstrap
+tailwind,tailwind css
+jira,jira
+confluence,confluence
+api,application programming interface
+rest api,rest api
+graphql,graphql
+postman,postman
+insomnia,insomnia
+selenium,selenium
+cypress,cypress
+playwright,playwright
+notion,notion
+slack,slack
+asana,asana
+monday,monday.com
+shopify,shopify
+woocommerce,woocommerce
+magento,magento
+stripe,stripe
+paypal,paypal
+twilio,twilio
+mailchimp,mailchimp
+sendgrid,sendgrid
+quickbooks,quickbooks
+mixpanel,mixpanel
+hotjar,hotjar
+segment,segment
+elastic,elasticsearch
+bigcommerce,bigcommerce
+opensearch,elasticsearch
+adwords,google ads
+google ads,google ads
+youtube ads,youtube ads platform
+linkedin ads,linkedin advertising
+figma,figma
+xd,adobe xd
+photoshop,adobe photoshop
+illustrator,adobe illustrator
+aftereffects,adobe after effects
+clickup,clickup
+miro,miro
+draw.io,draw.io
+lucidchart,lucidchart
+snowplow,snowplow analytics
+amplitude,amplitude analytics
+datadog,datadog
+new relic,new relic
+sentry,sentry
+heap,heap analytics
+zapier,zapier
+ifttt,ifttt
+splunk,splunk
+lookml,looker
+looker,looker
+tableau,tableau software
+power bi,power bi
+notebooks,jupyter notebooks
+jupyter,jupyter notebooks
+colab,google colab
+dvc,data version control
+mlflow,mlflow
+kibana,kibana
+airbyte,airbyte
+fivetran,fivetran
+dagster,dagster
+great expectations,great expectations
+dbt,dbt
+sqlalchemy,sqlalchemy
+redis,redis
+mongodb,mongodb
+cassandra,cassandra
+neo4j,neo4j
+arangodb,arangodb
+influxdb,influxdb
+timescaledb,timescaledb
+hazelcast,hazelcast
+eventbridge,aws eventbridge
+sns,aws sns
+sqs,aws sqs
+step functions,aws step functions
+appsync,aws appsync
+api gateway,aws api gateway
+cloudfront,aws cloudfront
+route 53,aws route 53
+efs,aws efs
+ecr,aws ecr
+fargate,aws fargate
+codepipeline,aws codepipeline
+codebuild,aws codebuild
+guardduty,aws guardduty
+security hub,aws security hub
+inspector,aws inspector
+waf,aws waf
+vpc,aws vpc
+cloudwatch,aws cloudwatch
+iam,aws iam
+secrets manager,aws secrets manager
+parameter store,aws parameter store
+identity center,aws sso
+workspaces,aws workspaces
+quicksight,aws quicksight
+athena,aws athena
+glue,aws glue
+lake formation,aws lake formation
+cloud9,aws cloud9
+akamai,akamai
+cloudflare,cloudflare
+fastly,fastly
+fortinet,fortinet
+palo alto,palo alto networks
+checkpoint,checkpoint
+juniper,juniper networks
+dataverse,azure dataverse
+power automate,microsoft power automate
+logic apps,azure logic apps
+mulesoft,mulesoft
+boomi,boomi
+biztalk,biztalk server
+salesforce,salesforce crm
+hubspot,hubspot crm
+zendesk,zendesk
+freshdesk,freshdesk
+intercom,intercom
+drift,drift chat
+genesys,genesys cloud
+twist,twist
+mattermost,mattermost
+rocket.chat,rocket chat
+discourse,discourse
+ghost,ghost cms
+wordpress,wordpress
+drupal,drupal
+joomla,joomla
+typo3,typo3
+umbraco,umbraco
+strapi,strapi
+contentful,contentful
+sanity,sanity io
+prismic,prismic
+storyblok,storyblok
+netlify,netlify
+vercel,vercel
+heroku,heroku
+render,render
+digital ocean,digital ocean
+linode,linode
+vultr,vultr
+ovh,ovh cloud
+hetzner,hetzner cloud
+scaleway,scaleway
+upcloud,upcloud
+backblaze,backblaze b2
+wasabi,wasabi storage
+cloudinary,cloudinary
+imgix,imgix
+filestack,filestack
+alibaba cloud,alibaba cloud
+tencent cloud,tencent cloud
+baidu cloud,baidu cloud
+oracle cloud,oracle cloud infrastructure
+ibm cloud,ibm cloud
+nvidia,nvidia ai
+amd,amd ai
+intel,intel ai
+raspberry pi,raspberry pi
+arduino,arduino
+esp32,esp32
+openwrt,openwrt
+ubiquiti,ubiquiti networks
+mikrotik,mikrotik
+pfSense,pfsense
+freebsd,freebsd
+arch linux,arch linux
+centos,centos
+fedora,fedora
+opensuse,open suse
+rocky linux,rocky linux
+almalinux,almalinux
+windows server,windows server os
+macos,macos
+chromeos,chrome os
+vmware,vmware esxi
+proxmox,proxmox ve
+hyper-v,hyper-v
+virtualbox,virtualbox
+kvm,kvm
+qemu,qemu
+ansible tower,ansible tower
+openstack,openstack
+xen,xenserver
+ceph,ceph storage
+glusterfs,glusterfs
+minio,minio storage
+hashicorp vault,vault
+kong,kong api gateway
+tyk,tyk api gateway
+nginx ingress,nginx ingress controller
+traefik,traefik
+haproxy,haproxy
+envoy,envoy proxy
+linkerd,linkerd
+istio,istio service mesh

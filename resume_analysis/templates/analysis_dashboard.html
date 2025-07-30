@@ -1,49 +1,795 @@
-{% extends 'notes/base.html'%}
+{% extends 'notes/base.html' %}
 {% load static %}
 
-  <!-- Tailwind CSS CDN -->
-{%block style%}
+{% block style %}
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<!-- Custom Loader CSS -->
 <link rel="stylesheet" href="{% static 'job/css/loader.css' %}">
-{%endblock%}
+<!-- Custom Styles -->
+<style>
+  :root {
+    --resume-primary: #3b82f6;
+    --resume-success: #10b981;
+    --resume-warning: #f59e0b;
+    --resume-info: #06b6d4;
+    --resume-danger: #ef4444;
+    --resume-gray-50: #f9fafb;
+    --resume-gray-100: #f3f4f6;
+    --resume-gray-200: #e5e7eb;
+    --resume-gray-300: #d1d5db;
+    --resume-gray-600: #4b5563;
+    --resume-gray-900: #111827;
+    --resume-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --resume-gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
 
-{%block content %}
+  .resume-analysis-body {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: var(--resume-gray-900);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+  }
 
-  <div class="">
-    <h1 class="text-3xl font-bold text-blue-600 mb-4 text-center">
-      Resume Analysis
-    </h1>
-    <h2 class="text-xl text-gray-600 text-center mb-6">
-      Job #{{job_number}} | Resume #{{res_number}}
-    </h2>
-    
-    <h2 class="text-2xl font-bold mb-4">Resume PDF</h2>
+  .resume-hero-section {
+    background: var(--resume-gradient-primary);
+    color: white;
+    padding: 3rem 0;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 3rem;
+  }
 
-    {% if pdf_file %}
-    <div class="d-flex p-5 gap-4">
-        <div class="col-6">
-        <h3 class="text-2xl font-semibold mb-4 text-gray-700">Extracted Entities</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {% for item in ner_list %}
-          <div class="bg-blue-100 border border-blue-100 p-2 rounded shadow text-center">
-            <span class="text-blue-700 font-small text-sm">{{ item }}</span>
+  .resume-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='m0 40l40-40h-40v40zm40 0v-40h-40l40 40z'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  }
+
+  .resume-hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .resume-score-showcase {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .resume-score-showcase::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .resume-score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--resume-gradient-success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    margin: 0 auto 1rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+  }
+
+  .resume-score-circle::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(45deg, #10b981, #06b6d4, #3b82f6);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+  }
+
+  .resume-metric-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .resume-metric-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    border: 1px solid var(--resume-gray-200);
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .resume-metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .resume-metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .resume-exact-card::before {
+    background: var(--resume-success);
+  }
+
+  .resume-fuzzy-card::before {
+    background: var(--resume-warning);
+  }
+
+  .resume-semantic-card::before {
+    background: var(--resume-info);
+  }
+
+  .resume-missing-card::before {
+    background: var(--resume-danger);
+  }
+
+  .resume-metric-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, var(--resume-primary), var(--resume-info));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .resume-content-section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--resume-gray-200);
+    position: relative;
+  }
+
+  .resume-section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--resume-gray-100);
+    position: relative;
+  }
+
+  .resume-section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--resume-gradient-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+  }
+
+  .resume-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--resume-gray-900);
+  }
+
+  .resume-pdf-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--resume-gray-200);
+  }
+
+  .resume-entities-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .resume-entity-tag {
+    background: linear-gradient(45deg, var(--resume-primary), var(--resume-info));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+  }
+
+  .resume-entity-tag:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+  }
+
+  .resume-match-analysis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .resume-match-card {
+    background: white;
+    border-radius: 16px;
+    padding: 0;
+    border: 1px solid var(--resume-gray-200);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .resume-match-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .resume-match-header {
+    padding: 1.5rem 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .resume-match-type-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .resume-exact-match .resume-match-type-icon {
+    background: linear-gradient(45deg, var(--resume-success), #059669);
+    color: white;
+  }
+
+  .resume-fuzzy-match .resume-match-type-icon {
+    background: linear-gradient(45deg, var(--resume-warning), #d97706);
+    color: white;
+  }
+
+  .resume-semantic-match .resume-match-type-icon {
+    background: linear-gradient(45deg, var(--resume-info), #0891b2);
+    color: white;
+  }
+
+  .resume-missing-match .resume-match-type-icon {
+    background: linear-gradient(45deg, var(--resume-danger), #dc2626);
+    color: white;
+  }
+
+  .resume-match-info h6 {
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+  }
+
+  .resume-match-count {
+    font-size: 0.875rem;
+    color: var(--resume-gray-600);
+    font-weight: 500;
+  }
+
+  .resume-match-content {
+    padding: 1rem 1.5rem 1.5rem;
+  }
+
+  .resume-skill-showcase {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .resume-skill-pill {
+    background: var(--resume-gray-100);
+    color: var(--resume-gray-900);
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid var(--resume-gray-200);
+    transition: all 0.2s ease;
+  }
+
+  .resume-skill-pill:hover {
+    background: var(--resume-gray-200);
+    transform: scale(1.05);
+  }
+
+  .resume-skill-connection {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: var(--resume-gray-50);
+    border-radius: 8px;
+    border: 1px solid var(--resume-gray-200);
+  }
+
+  .resume-skill-item {
+    background: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.875rem;
+    border: 1px solid var(--resume-gray-300);
+  }
+
+  .resume-connection-arrow {
+    color: var(--resume-gray-600);
+    font-size: 0.875rem;
+  }
+
+  .resume-breakdown-container {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--resume-gray-200);
+  }
+
+  .resume-breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--resume-gray-200);
+  }
+
+  .resume-breakdown-item:last-child {
+    border-bottom: none;
+  }
+
+  .resume-breakdown-label {
+    font-weight: 600;
+    color: var(--resume-gray-900);
+  }
+
+  .resume-breakdown-value {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--resume-primary);
+  }
+
+  .resume-weight-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 2px solid;
+    transition: all 0.3s ease;
+  }
+
+  .resume-weight-core {
+    border-color: var(--resume-primary);
+    color: var(--resume-primary);
+  }
+
+  .resume-weight-support {
+    border-color: var(--resume-gray-600);
+    color: var(--resume-gray-600);
+  }
+
+  .resume-weight-nice {
+    border-color: var(--resume-gray-400);
+    color: var(--resume-gray-600);
+  }
+
+  .resume-empty-illustration {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--resume-gray-600);
+  }
+
+  .resume-empty-illustration i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.3;
+  }
+
+  .resume-progress-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+
+    background: conic-gradient(var(--resume-success) 0deg, var(--resume-success) calc({
+          {
+          match_data.score_percent
+        }
+      }
+
+      % * 3.6deg), var(--resume-gray-200) calc({
+        {
+        match_data.score_percent
+      }
+    }
+
+    % * 3.6deg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  }
+
+  .resume-progress-ring::before {
+    content: '';
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  .resume-progress-text {
+    position: absolute;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: var(--resume-gray-900);
+  }
+
+  @keyframes resume-fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .resume-animate-in {
+    animation: resume-fadeInUp 0.6s ease-out forwards;
+  }
+
+  .resume-color-success {
+    color: var(--resume-success);
+  }
+
+  .resume-color-warning {
+    color: var(--resume-warning);
+  }
+
+  .resume-color-info {
+    color: var(--resume-info);
+  }
+
+  .resume-color-danger {
+    color: var(--resume-danger);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="resume-analysis-body">
+  <!-- Hero Section -->
+  <div class="resume-hero-section">
+    <div class="container">
+      <div class="resume-hero-content">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h1 class="display-5 fw-bold mb-3">
+              <i class="bi bi-cpu me-3"></i>AI Resume Analysis
+            </h1>
+            <p class="lead mb-0 opacity-90">
+              Advanced skill matching powered by machine learning algorithms
+            </p>
           </div>
-        {% endfor %}
+          <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+            <div class="d-inline-flex align-items-center bg-white bg-opacity-20 rounded-pill px-4 py-2">
+              <i class="bi bi-briefcase me-2"></i>
+              <span class="fw-semibold">Job #{{ job_number }}</span>
+              <span class="mx-3 opacity-50">•</span>
+              <i class="bi bi-file-person me-2"></i>
+              <span class="fw-semibold">Resume #{{ res_number }}</span>
+            </div>
+          </div>
         </div>
       </div>
-        <div class="col-6"><embed src="{{ simple_pdf_url }}" width="100%" height="80%" type="application/pdf"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Score Showcase -->
+    <div class="resume-score-showcase resume-animate-in">
+      <div class="row align-items-center">
+        <div class="col-lg-4 text-center">
+          <div class="resume-score-circle">
+            {{ match_data.score_percent }}%
+          </div>
+          <h4 class="fw-bold text-muted mb-0">Match Score</h4>
+          <p class="text-muted mb-0">Overall Compatibility</p>
+        </div>
+        <div class="col-lg-8 mt-4 mt-lg-0">
+          <div class="resume-metric-cards">
+            <div class="resume-metric-card resume-exact-card">
+              <div class="resume-metric-number resume-color-success">{{ match_data.exact_matches|length }}</div>
+              <div class="fw-semibold">Exact Matches</div>
+              <div class="small text-muted">Perfect alignments</div>
+            </div>
+            <div class="resume-metric-card resume-fuzzy-card">
+              <div class="resume-metric-number resume-color-warning">{{ match_data.fuzzy_matches|length }}</div>
+              <div class="fw-semibold">Fuzzy Matches</div>
+              <div class="small text-muted">Similar variations</div>
+            </div>
+            <div class="resume-metric-card resume-semantic-card">
+              <div class="resume-metric-number resume-color-info">{{ match_data.semantic_matches|length }}</div>
+              <div class="fw-semibold">Semantic Matches</div>
+              <div class="small text-muted">AI-detected relations</div>
+            </div>
+            <div class="resume-metric-card resume-missing-card">
+              <div class="resume-metric-number resume-color-danger">{{ match_data.missing_skills|length }}</div>
+              <div class="fw-semibold">Missing Skills</div>
+              <div class="small text-muted">Gaps identified</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume Document & Entities -->
+    {% if pdf_file %}
+    <div class="row">
+      <div class="col-lg-5 mb-4">
+        <div class="resume-content-section resume-animate-in">
+          <div class="resume-section-header">
+            <div class="resume-section-icon">
+              <i class="bi bi-tags-fill"></i>
+            </div>
+            <div>
+              <h3 class="resume-section-title">Extracted Entities</h3>
+              <p class="text-muted mb-0">{{ ner_list|length }} entities identified</p>
+            </div>
+          </div>
+          <div class="resume-entities-grid">
+            {% for item in ner_list %}
+            <span class="resume-entity-tag">{{ item }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7 mb-4">
+        <div class="resume-content-section resume-animate-in">
+          <div class="resume-section-header">
+            <div class="resume-section-icon">
+              <i class="bi bi-file-pdf-fill"></i>
+            </div>
+            <div>
+              <h3 class="resume-section-title">Resume Document</h3>
+              <p class="text-muted mb-0">Source document analysis</p>
+            </div>
+          </div>
+          <div class="resume-pdf-container">
+            <embed src="{{ simple_pdf_url }}" width="100%" height="500px" type="application/pdf">
+          </div>
+        </div>
+      </div>
     </div>
     {% else %}
-    <p>No PDF uploaded.</p>
+    <div class="resume-content-section resume-animate-in">
+      <div class="resume-empty-illustration">
+        <i class="bi bi-cloud-upload"></i>
+        <h4>No Resume Document</h4>
+        <p class="mb-0">Upload a resume file to begin the comprehensive analysis</p>
+      </div>
+    </div>
     {% endif %}
+
+    <!-- Match Analysis -->
+    <div class="resume-content-section resume-animate-in">
+      <div class="resume-section-header">
+        <div class="resume-section-icon">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div>
+          <h3 class="resume-section-title">Skill Match Analysis</h3>
+          <p class="text-muted mb-0">Detailed breakdown of skill alignments</p>
+        </div>
+      </div>
+
+      <div class="resume-match-analysis">
+        <!-- Exact Matches -->
+        <div class="resume-match-card resume-exact-match">
+          <div class="resume-match-header">
+            <div class="resume-match-type-icon">
+              <i class="bi bi-bullseye"></i>
+            </div>
+            <div class="resume-match-info">
+              <h6>Exact Matches</h6>
+              <div class="resume-match-count">{{ match_data.exact_matches|length }} perfect alignments</div>
+            </div>
+          </div>
+          <div class="resume-match-content">
+            <div class="resume-skill-showcase">
+              {% for skill in match_data.exact_matches %}
+              <span class="resume-skill-pill">{{ skill }}</span>
+              {% empty %}
+              <div class="text-muted fst-italic">No exact matches found</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Fuzzy Matches -->
+        <div class="resume-match-card resume-fuzzy-match">
+          <div class="resume-match-header">
+            <div class="resume-match-type-icon">
+              <i class="bi bi-search-heart"></i>
+            </div>
+            <div class="resume-match-info">
+              <h6>Fuzzy Matches</h6>
+              <div class="resume-match-count">{{ match_data.fuzzy_matches|length }} similar variations</div>
+            </div>
+          </div>
+          <div class="resume-match-content">
+            {% for pair in match_data.fuzzy_matches %}
+            <div class="resume-skill-connection">
+              <span class="resume-skill-item">{{ pair.0 }}</span>
+              <i class="bi bi-arrow-left-right resume-connection-arrow"></i>
+              <span class="resume-skill-item">{{ pair.1 }}</span>
+            </div>
+            {% empty %}
+            <div class="text-muted fst-italic">No fuzzy matches found</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Semantic Matches -->
+        <div class="resume-match-card resume-semantic-match">
+          <div class="resume-match-header">
+            <div class="resume-match-type-icon">
+              <i class="bi bi-brain"></i>
+            </div>
+            <div class="resume-match-info">
+              <h6>Semantic Matches</h6>
+              <div class="resume-match-count">{{ match_data.semantic_matches|length }} AI-detected relations</div>
+            </div>
+          </div>
+          <div class="resume-match-content">
+            {% for pair in match_data.semantic_matches %}
+            <div class="resume-skill-connection">
+              <span class="resume-skill-item">{{ pair.0 }}</span>
+              <i class="bi bi-arrow-left-right resume-connection-arrow"></i>
+              <span class="resume-skill-item">{{ pair.1 }}</span>
+            </div>
+            {% empty %}
+            <div class="text-muted fst-italic">No semantic matches found</div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="resume-match-card resume-missing-match">
+          <div class="resume-match-header">
+            <div class="resume-match-type-icon">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div class="resume-match-info">
+              <h6>Missing Skills</h6>
+              <div class="resume-match-count">{{ match_data.missing_skills|length }} gaps identified</div>
+            </div>
+          </div>
+          <div class="resume-match-content">
+            <div class="resume-skill-showcase">
+              {% for skill in match_data.missing_skills %}
+              <span class="resume-skill-pill">{{ skill }}</span>
+              {% empty %}
+              <div class="text-success fst-italic fw-semibold">🎉 All required skills found!</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scoring Methodology -->
+    <div class="row">
+      <div class="col-lg-8 mb-4">
+        <div class="resume-content-section resume-animate-in">
+          <div class="resume-section-header">
+            <div class="resume-section-icon">
+              <i class="bi bi-calculator-fill"></i>
+            </div>
+            <div>
+              <h3 class="resume-section-title">Scoring Breakdown</h3>
+              <p class="text-muted mb-0">Transparent scoring methodology</p>
+            </div>
+          </div>
+          <div class="resume-breakdown-container">
+            <div class="resume-breakdown-item">
+              <span class="resume-breakdown-label">Total Points Possible</span>
+              <span class="resume-breakdown-value">{{ match_data.total_points|default:"—" }}</span>
+            </div>
+            <div class="resume-breakdown-item">
+              <span class="resume-breakdown-label">Points Earned</span>
+              <span class="resume-breakdown-value">{{ match_data.score|default:"—" }}</span>
+            </div>
+            <div class="resume-breakdown-item">
+              <span class="resume-breakdown-label">Final Match Percentage</span>
+              <span class="resume-breakdown-value">{{ match_data.score_percent }}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4 mb-4">
+        <div class="resume-content-section resume-animate-in">
+          <div class="resume-section-header">
+            <div class="resume-section-icon">
+              <i class="bi bi-award-fill"></i>
+            </div>
+            <div>
+              <h3 class="resume-section-title">Skill Weights</h3>
+              <p class="text-muted mb-0">Category multipliers</p>
+            </div>
+          </div>
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Core Skills</span>
+              <span class="resume-weight-indicator resume-weight-core">2.0x</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Support Skills</span>
+              <span class="resume-weight-indicator resume-weight-support">1.0x</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Nice-to-Have</span>
+              <span class="resume-weight-indicator resume-weight-nice">0.5x</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-{%endblock%}
+</div>
+{% endblock %}
 
-{%block script%}
-<script src="https://cdn.tailwindcss.com"></script>
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pace-js@latest/pace.min.js"></script>
-
 <script>
-  // Prevent Pace from auto-hiding before we want it to
+  // Pace.js configuration
   Pace.options = {
     ajax: true,
     document: true,
@@ -52,12 +798,103 @@
     startOnPageLoad: true
   };
 
-  // When Pace finishes loading (but before it hides)
   Pace.on('done', function () {
-    // Force loader to stay for 5 seconds
     setTimeout(function () {
-      document.querySelector('.pace').classList.add('pace-inactive'); // hide loader
+      const paceElement = document.querySelector('.pace');
+      if (paceElement) {
+        paceElement.classList.add('pace-inactive');
+      }
     }, 5000);
   });
+
+  // Enhanced animations and interactions
+  document.addEventListener('DOMContentLoaded', function () {
+    // Staggered animation for elements
+    const animatedElements = document.querySelectorAll('.resume-animate-in');
+    animatedElements.forEach((element, index) => {
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(30px)';
+
+      setTimeout(() => {
+        element.style.transition = 'all 0.6s ease';
+        element.style.opacity = '1';
+        element.style.transform = 'translateY(0)';
+      }, index * 200);
+    });
+
+    // Interactive hover effects for metric cards
+    const metricCards = document.querySelectorAll('.resume-metric-card');
+    metricCards.forEach(card => {
+      card.addEventListener('mouseenter', function () {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+
+      card.addEventListener('mouseleave', function () {
+        this.style.transform = 'translateY(-4px) scale(1)';
+      });
+    });
+
+    // Animate score circle on scroll into view
+    const scoreCircle = document.querySelector('.resume-score-circle');
+    if (scoreCircle) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animation = 'pulse 2s ease-in-out infinite';
+          }
+        });
+      });
+      observer.observe(scoreCircle);
+    }
+
+    // Enhanced entity tag interactions
+    const entityTags = document.querySelectorAll('.resume-entity-tag');
+    entityTags.forEach((tag, index) => {
+      tag.style.animationDelay = `${index * 50}ms`;
+
+      tag.addEventListener('click', function () {
+        this.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 150);
+      });
+    });
+
+    // Skill pill hover effects
+    const skillPills = document.querySelectorAll('.resume-skill-pill');
+    skillPills.forEach(pill => {
+      pill.addEventListener('mouseenter', function () {
+        this.style.background = 'var(--resume-primary)';
+        this.style.color = 'white';
+        this.style.transform = 'translateY(-2px)';
+      });
+
+      pill.addEventListener('mouseleave', function () {
+        this.style.background = 'var(--resume-gray-100)';
+        this.style.color = 'var(--resume-gray-900)';
+        this.style.transform = 'translateY(0)';
+      });
+    });
+
+    // Match card entrance animations
+    const matchCards = document.querySelectorAll('.resume-match-card');
+    const matchObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, index * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    matchCards.forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'all 0.5s ease';
+      matchObserver.observe(card);
+    });
+  });
 </script>
-{%endblock%}
+{% endblock %}

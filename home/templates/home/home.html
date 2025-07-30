@@ -17,13 +17,13 @@
 {%block extra_css%}
 
 <style>
-    /* Base Styles */
+    /* Base Styles - UPDATED FOR WHITE THEME */
     .rr-hero-section {
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
         min-height: 100vh;
         overflow: hidden;
         position: relative;
-        color: white;
+        color: #1e293b;
         display: flex;
         align-items: center;
     }
@@ -34,8 +34,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDIpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=');
-        opacity: 0.4;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgdmlld0JveD0iMCAwIDYwIDYwIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDYwIDAgTCAwIDAgMCA2MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDMwLDQxLDU5LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=');
+        opacity: 0.6;
     }
 
     .rr-hero-container {
@@ -44,14 +44,14 @@
         padding: 3rem 0;
     }
 
-    /* Typography */
+    /* Typography - UPDATED FOR WHITE THEME */
     .rr-hero-title {
         font-family: 'Bricolage Grotesque', sans-serif;
         font-size: 4rem;
         font-weight: 700;
         line-height: 1.1;
         margin-bottom: 1.5rem;
-        background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+        background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -65,7 +65,7 @@
         font-family: 'Inter', sans-serif;
         font-size: 1.3rem;
         font-weight: 400;
-        color: #b8b8b8;
+        color: #64748b;
         max-width: 90%;
         margin-bottom: 2rem;
         line-height: 1.6;
@@ -80,7 +80,7 @@
         display: inline-block;
     }
 
-    /* Buttons */
+    /* Buttons - UPDATED FOR WHITE THEME */
     .rr-hero-buttons {
         margin-top: 2.5rem;
         display: flex;
@@ -108,36 +108,37 @@
         background: linear-gradient(135deg, #4f46e5, #7c3aed);
         color: white;
         border: none;
-        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+        box-shadow: 0 4px 20px rgba(79, 70, 229, 0.25);
     }
 
     .rr-secondary-btn {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+        background: #ffffff;
+        color: #4f46e5;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .rr-primary-btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.4);
+        box-shadow: 0 8px 30px rgba(79, 70, 229, 0.35);
         color: white;
     }
 
     .rr-secondary-btn:hover {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.3);
+        background: #f8fafc;
+        border-color: #4f46e5;
         transform: translateY(-2px);
-        color: white;
+        color: #4f46e5;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
-    /* Social Proof */
+    /* Social Proof - UPDATED FOR WHITE THEME */
     .rr-social-proof {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(10px);
+        background: #ffffff;
         border-radius: 12px;
         padding: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
         display: flex;
         align-items: center;
         gap: 2rem;
@@ -162,29 +163,29 @@
     }
 
     .rr-rating-text {
-        color: rgba(255, 255, 255, 0.7);
+        color: #64748b;
         font-size: 0.9rem;
         font-family: 'Inter', sans-serif;
     }
 
     .rr-stats {
         padding-left: 2rem;
-        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: 1px solid #e2e8f0;
     }
 
     .rr-stat-number {
         font-weight: 600;
         font-size: 1.5rem;
-        color: white;
+        color: #1e293b;
     }
 
     .rr-stat-text {
-        color: rgba(255, 255, 255, 0.7);
+        color: #64748b;
         font-size: 0.9rem;
         font-family: 'Inter', sans-serif;
     }
 
-    /* Image Container */
+    /* Image Container - UPDATED FOR WHITE THEME */
     .rr-image-container {
         position: relative;
         perspective: 1000px;
@@ -193,15 +194,16 @@
 
     .rr-main-image {
         max-width: 85%;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
         transform: rotateY(-5deg) rotateX(2deg);
         transition: all 0.5s ease;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
     }
 
     .rr-image-container:hover .rr-main-image {
         transform: rotateY(-2deg) rotateX(1deg) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
     }
 
     .rr-image-glow {
@@ -210,18 +212,18 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle at center, rgba(79, 70, 229, 0.3) 0%, rgba(124, 58, 237, 0) 70%);
+        background: radial-gradient(circle at center, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0) 70%);
         border-radius: 12px;
         z-index: -1;
         transform: translateZ(-20px);
     }
 
-    /* Floating Elements */
+    /* Floating Elements - UPDATED FOR WHITE THEME */
     .rr-floating-circle {
         position: absolute;
         width: 80px;
         height: 80px;
-        background: rgba(79, 70, 229, 0.1);
+        background: rgba(79, 70, 229, 0.06);
         border-radius: 50%;
         top: -10px;
         left: 20px;
@@ -233,7 +235,7 @@
         position: absolute;
         width: 120px;
         height: 20px;
-        background: rgba(124, 58, 237, 0.1);
+        background: rgba(124, 58, 237, 0.06);
         border-radius: 10px;
         bottom: 30px;
         right: -30px;
@@ -241,7 +243,7 @@
         animation: rr-float 8s ease-in-out infinite 2s;
     }
 
-    /* Scroll Indicator */
+    /* Scroll Indicator - UPDATED FOR WHITE THEME */
     .rr-scroll-indicator {
         position: absolute;
         bottom: 2rem;
@@ -251,7 +253,7 @@
     }
 
     .rr-scroll-link {
-        color: rgba(255, 255, 255, 0.7);
+        color: #64748b;
         text-decoration: none;
         font-family: 'Inter', sans-serif;
         font-size: 0.9rem;
@@ -270,7 +272,7 @@
     .rr-mouse-animation {
         width: 20px;
         height: 35px;
-        border: 2px solid rgba(255, 255, 255, 0.5);
+        border: 2px solid #94a3b8;
         border-radius: 10px;
         position: relative;
     }
@@ -278,7 +280,7 @@
     .rr-mouse {
         width: 4px;
         height: 6px;
-        background: rgba(255, 255, 255, 0.7);
+        background: #64748b;
         border-radius: 2px;
         position: absolute;
         top: 6px;
@@ -353,7 +355,7 @@
             border-left: none;
             padding-left: 0;
             padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid #e2e8f0;
         }
     }
 
@@ -857,7 +859,6 @@
         </a>
     </div>
 </section>
-
 <!-- Features Section -->
 <section id="features" class="py-5">
     <div class="container">
