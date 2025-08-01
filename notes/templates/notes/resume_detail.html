@@ -629,7 +629,7 @@
                     {% for key, value in score.items %}
                     <div class="score-section">
                         <h4 class="score-title">{{ key }}</h4>
-                        <a href="{% url 'resume_dashboard' job.id value.1 %}" class="score-link">
+                        <a href="{% url 'resume_dashboard' job.id value.1 %}" target="_blank" class="score-link">
                             <i class="fas fa-chart-line"></i>
                             View Detailed Analysis
                         </a>

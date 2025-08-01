@@ -14,7 +14,7 @@ JOB_TYPE_CHOICES = [
 
 class UploadedFiles(models.Model):
     # RELATIONAL FIELDS
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default="null")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default="null") # 3 ✅ authentication url safety
     job = models.ForeignKey(PostJobModel, on_delete=models.CASCADE, related_name='resume_files')
 
     # RESUME ORIGINAL INFO

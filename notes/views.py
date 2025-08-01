@@ -16,10 +16,17 @@ from resume_analysis.spacy_resume.spacy_ner import spacy_ner
 from django.contrib.auth.decorators import login_required
 from pyresparser import ResumeParser
 import subprocess
+import json
 # Create your views here.
 # def members(request):
 #     template = loader.get_template('notes/resume.html')
 #     return HttpResponse(template.render())
+
+# HELPER FUNCTION
+def clean_resume_skills(skills):
+    if not isinstance(skills, list):
+        return []
+    return list(set([s.strip().lower() for s in skills if isinstance(s, str) and len(s.strip()) > 1]))
 
 @login_required
 def upload_file(request):
@@ -46,8 +53,8 @@ def transformer_test(request, id):
                 
             sorted_score = dict(sorted(rank_dict.items(), key=lambda item: item[1], reverse=True))
             return render(request, "notes/resume_detail.html", {'job': job_instance, "form": form, loader:False, "score": sorted_score})
-        
-        
+
+
 def resume_details(request, id):
 
     pyres_function = r"C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\Resume\notes\pyres_skill.py"
@@ -72,16 +79,39 @@ def resume_details(request, id):
                         [pyres_venv, pyres_function, file_path],
                         stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE,
-                        universal_newlines=True  # Equivalent to text=True in 3.7+
+                        universal_newlines=True
                     )
-                    output = result.stdout.strip()  # "Python,Django,Machine Learning"
-                    skills_list = output.split(",")  # ['Python', 'Django', 'Machine Learning']
-                    instance.extracted_resume_skills = skills_list
+
+                    output = result.stdout.strip()
+
+                    try:
+                        parsed_data = json.loads(output)
+                        
+                    except json.JSONDecodeError:
+                        parsed_data = {}
+                        print("Invalid JSON from pyres_skill output")
+                        print("RAW:", output)
+
+                    # Step 4: Fill model fields with parsed data
+                    instance.name = parsed_data.get("name")
+                    instance.email = parsed_data.get("email")
+                    instance.mobile_number = parsed_data.get("phone")
+                    instance.college_name = parsed_data.get("college_name")
+                    instance.degree = parsed_data.get("degree")
+                    instance.designation = parsed_data.get("designation")
+                    instance.total_experience = parsed_data.get("total_experience")
+
+                    company_names = parsed_data.get("company_names", [])
+                    if isinstance(company_names, list):
+                        instance.company_names = ", ".join(company_names)
+
+                    raw_skills = parsed_data.get("skills", [])
+                    instance.extracted_resume_skills = clean_resume_skills(raw_skills)
+
                     instance.save()
 
                 except subprocess.CalledProcessError as e:
-                    print("Subprocess failed with error:")
-                    print("STDOUT:", e.output)
+                    print("pyres_skill failed")
                     print("STDERR:", e.stderr)
 
 
