@@ -14,7 +14,7 @@ urlpatterns = [
     path('job/generate_description/', generate_job_description, name='ai_description'),
     path('', home),   
     path('rank-resume/job/<int:id>/', resume_details, name='resume_detail'),
-    path('rank-resume/job/<int:job_id>/resume/<int:res_id>/', resume_dashboard, name='resume_dashboard'),
+    path('resume-analysis/<int:job_id>/<uuid:resume_uuid>/', rank_resumes_for_job, name='resume_dashboard'),
     path('test/job/<int:job_id>/resume/<int:res_id>/', rank_resumes_for_job, name='test_ranker'),
     path('accounts/', include('allauth.urls')),
     path('transformer/job/<int:id>/', transformer_test)

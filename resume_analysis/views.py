@@ -7,7 +7,7 @@ from job.models import PostJobModel
 import os
 from .skill_compare import pred
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from .utils import rank_resume
 # Create your views here.
 
@@ -42,9 +42,11 @@ def resume_dashboard(request, job_id, res_id):
         resume_job_match = pred(ner_results, job_skills)
         return render(request, "analysis_dashboard.html", {'job_number': job_id,'res_number': res_id, 'resume_content': text, "ner_list": ner_results , "pdf_file": file.file_field, "simple_pdf_url": simple_pdf_url_relative, "match_data": resume_job_match})
 
-def rank_resumes_for_job(request, job_id, res_id):  # Add resume_id parameter
+def rank_resumes_for_job(request, job_id, resume_uuid):
     job = PostJobModel.objects.get(pk=job_id)
-    resume = UploadedFiles.objects.get(user = request.user, pk = res_id)
+    resume = UploadedFiles.objects.get(user = request.user, uuid=resume_uuid) # ✅ 1 authentication url safety
+    if resume.user != request.user:
+        return HttpResponseForbidden("You are not allowed to view this resume.") # ✅ 2 authentication url safety
     candidate = rank_resume(resume, job)  # Single candidate analysis
     
     context = {

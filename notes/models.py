@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from authentication.models import CustomUser
 from job.models import PostJobModel
 from django.db.models import JSONField  # Django 3.1+
+import uuid
 JOB_TYPE_CHOICES = [
     ("FT", "Full Time"),
     ("PT", "Part Time"),
@@ -13,6 +14,7 @@ JOB_TYPE_CHOICES = [
 # Create your models here.
 
 class UploadedFiles(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True) # 4 ✅ authentication url safety
     # RELATIONAL FIELDS
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default="null") # 3 ✅ authentication url safety
     job = models.ForeignKey(PostJobModel, on_delete=models.CASCADE, related_name='resume_files')

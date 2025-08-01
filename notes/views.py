@@ -118,7 +118,7 @@ def resume_details(request, id):
                 score = score_calculator(job_instance.job_description, read_pdf(each))
                 # get_ner_from_39_env(each)
                 rank_dict.setdefault(f"{each.name}", []).append(score)
-                rank_dict[f'{each.name}'].append(instance.id)
+                rank_dict[f'{each.name}'].append(str(instance.uuid))
                 time.sleep(2)
                 
             sorted_score = dict(sorted(rank_dict.items(), key=lambda item: item[1][0], reverse=True))

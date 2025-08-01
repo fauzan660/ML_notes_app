@@ -5,197 +5,451 @@
 {%block style%}
 <style>
     :root {
-        --ra-primary: #2563eb;
+        --ra-primary: #1a365d;
         --ra-secondary: #64748b;
-        --ra-success: #10b981;
-        --ra-warning: #f59e0b;
-        --ra-danger: #ef4444;
-        --ra-info: #06b6d4;
-        --ra-light: #f8fafc;
-        --ra-dark: #1e293b;
-        --ra-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --ra-accent: #3182ce;
+        --ra-success: #38a169;
+        --ra-warning: #d69e2e;
+        --ra-danger: #e53e3e;
+        --ra-info: #00a8cc;
+        --ra-light: #ffffff;
+        --ra-gray-50: #f7fafc;
+        --ra-gray-100: #edf2f7;
+        --ra-gray-200: #e2e8f0;
+        --ra-gray-300: #cbd5e0;
+        --ra-dark: #1a202c;
+        --ra-border: rgba(226, 232, 240, 0.8);
+        --ra-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --ra-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+        --ra-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.08);
+        --ra-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: var(--ra-dark);
+        line-height: 1.6;
     }
 
     .ra-header {
-        background: var(--ra-gradient);
-        color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        background: var(--ra-light);
+        border-bottom: 1px solid var(--ra-border);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
     }
 
-    .ra-score-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-        border: 1px solid #e2e8f0;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .ra-card {
+        background: var(--ra-light);
+        border-radius: 20px;
+        border: 1px solid var(--ra-border);
+        box-shadow: var(--ra-shadow-sm);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        position: relative;
     }
 
-    .ra-score-card:hover {
+    .ra-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--ra-primary), var(--ra-accent));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .ra-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        box-shadow: var(--ra-shadow-lg);
     }
 
-    .ra-progress-circle {
-        width: 120px;
-        height: 120px;
+    .ra-card:hover::before {
+        opacity: 1;
+    }
+
+    .ra-score-display {
+        background: linear-gradient(135deg, var(--ra-gray-50), var(--ra-light));
         border-radius: 50%;
+        width: 140px;
+        height: 140px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: relative;
         margin: 0 auto;
+        border: 3px solid var(--ra-gray-200);
     }
 
-    .ra-progress-bg {
-        background: conic-gradient(var(--ra-primary) 0deg, var(--ra-primary) calc(3.6deg * var(--percentage)), #e2e8f0 calc(3.6deg * var(--percentage)));
-    }
-
-    .ra-skill-badge {
-        display: inline-block;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.875rem;
-        font-weight: 500;
-        margin: 4px;
-        transition: all 0.2s ease;
-    }
-
-    .ra-skill-exact {
-        background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .ra-skill-semantic {
-        background: linear-gradient(135deg, #06b6d4, #0891b2);
-        color: white;
-        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
-    }
-
-    .ra-skill-missing {
-        background: #fee2e2;
-        color: #dc2626;
-        border: 1px solid #fecaca;
-    }
-
-    .ra-fitness-summary {
-        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        border-left: 4px solid var(--ra-primary);
-        border-radius: 8px;
-    }
-
-    .ra-section-title {
-        color: var(--ra-dark);
-        font-weight: 600;
-        position: relative;
-        padding-bottom: 12px;
-        margin-bottom: 24px;
-    }
-
-    .ra-section-title::after {
+    .ra-score-display::before {
         content: '';
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 50px;
-        height: 3px;
-        background: var(--ra-gradient);
-        border-radius: 2px;
+        inset: -3px;
+        border-radius: 50%;
+        padding: 3px;
+        background: conic-gradient(var(--ra-primary) 0deg, var(--ra-primary) calc(3.6deg * var(--percentage)), var(--ra-gray-200) calc(3.6deg * var(--percentage)));
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
     }
 
-    .ra-metric-box {
-        background: white;
-        border-radius: 12px;
-        padding: 24px;
+    .ra-metric-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .ra-metric-card {
+        background: var(--ra-light);
+        border-radius: 16px;
+        padding: 1.5rem;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--ra-border);
+        box-shadow: var(--ra-shadow-sm);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ra-metric-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--ra-accent), var(--ra-info));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .ra-metric-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .ra-metric-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        background: var(--ra-gray-50);
+        color: var(--ra-primary);
+        border: 1px solid var(--ra-border);
     }
 
     .ra-metric-value {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 700;
         color: var(--ra-primary);
-        margin-bottom: 8px;
+        margin-bottom: 0.5rem;
+        line-height: 1;
     }
 
     .ra-metric-label {
         color: var(--ra-secondary);
         font-size: 0.875rem;
         font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .ra-recommendation-card {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        border: 1px solid #f59e0b;
-        border-radius: 12px;
+    .ra-skill-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0;
     }
 
-    .ra-icon-wrapper {
+    .ra-skill-tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ra-skill-exact {
+        background: var(--ra-light);
+        color: var(--ra-success);
+        border-color: var(--ra-success);
+        box-shadow: 0 2px 4px rgba(56, 161, 105, 0.1);
+    }
+
+    .ra-skill-semantic {
+        background: var(--ra-light);
+        color: var(--ra-info);
+        border-color: var(--ra-info);
+        box-shadow: 0 2px 4px rgba(0, 168, 204, 0.1);
+    }
+
+    .ra-skill-missing {
+        background: var(--ra-light);
+        color: var(--ra-warning);
+        border-color: var(--ra-warning);
+        box-shadow: 0 2px 4px rgba(214, 158, 46, 0.1);
+    }
+
+    .ra-skill-tag:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--ra-shadow-md);
+    }
+
+    .ra-section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--ra-border);
+    }
+
+    .ra-section-icon {
         width: 48px;
         height: 48px;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
+        background: var(--ra-gray-50);
+        color: var(--ra-primary);
+        margin-right: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .ra-section-title {
         font-size: 1.5rem;
-        margin-bottom: 16px;
+        font-weight: 600;
+        color: var(--ra-dark);
+        margin: 0;
     }
 
-    .ra-icon-success {
-        background: #dcfce7;
-        color: #16a34a;
+    .ra-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 1.5rem 0;
     }
 
-    .ra-icon-info {
-        background: #dbeafe;
-        color: #2563eb;
+    .ra-info-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: var(--ra-gray-50);
+        border-radius: 12px;
+        border: 1px solid var(--ra-border);
     }
 
-    .ra-icon-warning {
-        background: #fef3c7;
-        color: #d97706;
+    .ra-info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ra-light);
+        color: var(--ra-primary);
+        margin-right: 0.75rem;
+        font-size: 1rem;
     }
 
-    @media (max-width: 768px) {
-        .ra-progress-circle {
-            width: 100px;
-            height: 100px;
-        }
+    .ra-info-content h6 {
+        margin: 0 0 0.25rem 0;
+        font-size: 0.75rem;
+        color: var(--ra-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-        .ra-metric-value {
-            font-size: 1.5rem;
-        }
+    .ra-info-content p {
+        margin: 0;
+        font-weight: 600;
+        color: var(--ra-dark);
+    }
+
+    .ra-recommendation-card {
+        background: linear-gradient(135deg, var(--ra-light), var(--ra-gray-50));
+        border: 2px solid var(--ra-border);
+        border-radius: 20px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ra-recommendation-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--ra-success), var(--ra-info));
+    }
+
+    .ra-list-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        background: var(--ra-gray-50);
+        border-radius: 12px;
+        border-left: 4px solid var(--ra-success);
+        transition: all 0.3s ease;
+    }
+
+    .ra-list-item:hover {
+        background: var(--ra-light);
+        transform: translateX(4px);
+    }
+
+    .ra-list-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--ra-success);
+        color: white;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .ra-education-item {
+        padding: 1rem;
+        background: var(--ra-light);
+        border-radius: 12px;
+        border: 1px solid var(--ra-border);
+        margin-bottom: 0.75rem;
+    }
+
+    .ra-experience-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .ra-timeline-item {
+        position: relative;
+        padding-bottom: 1.5rem;
+        border-left: 2px solid var(--ra-border);
+        padding-left: 2rem;
+        margin-left: 1rem;
+    }
+
+    .ra-timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -7px;
+        top: 0.5rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--ra-primary);
+    }
+
+    .ra-timeline-content {
+        background: var(--ra-light);
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 1px solid var(--ra-border);
+        box-shadow: var(--ra-shadow-sm);
     }
 
     .ra-fade-in {
-        animation: fadeInUp 0.6s ease-out;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
+    .ra-fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .ra-score-display {
+            width: 120px;
+            height: 120px;
         }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
+        .ra-metric-value {
+            font-size: 2rem;
         }
+
+        .ra-metric-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .ra-info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Enhanced animations */
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+    }
+
+    .ra-score-display:hover {
+        animation: pulse 2s infinite;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--ra-gray-100);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--ra-gray-300);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--ra-secondary);
     }
 </style>
 {%endblock%}
+
 {%block content%}
 <!-- Header -->
-<div class="ra-header py-4 mb-5">
+<div class="ra-header py-4 mb-4">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1 class="mb-2"><i class="fas fa-user-tie me-3"></i>Resume Analysis</h1>
-                <p class="mb-0 opacity-90">Candidate Profile for {{ job_title }} Position</p>
+                <h1 class="mb-2 fw-bold">
+                    <i class="fas fa-user-tie me-3 text-primary"></i>
+                    Resume Analysis Dashboard
+                </h1>
+                <p class="mb-0 text-muted">Comprehensive candidate evaluation for {{ job_title }} position</p>
             </div>
             <div class="col-md-4 text-md-end">
-                <span class="badge bg-light text-dark px-3 py-2">Job ID: {{ job_id }}</span>
+                <span class="badge bg-light text-dark px-3 py-2 border">Job ID: {{ job_id }}</span>
             </div>
         </div>
     </div>
@@ -205,38 +459,43 @@
     <!-- Overall Score Section -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="ra-score-card p-4 ra-fade-in">
+            <div class="ra-card p-4 ra-fade-in">
                 <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <div class="ra-progress-circle ra-progress-bg"
-                            style="--percentage: {{ candidate.final_score }}">
+                    <div class="col-md-4 text-center">
+                        <div class="ra-score-display" style="--percentage: {{ candidate.final_score }}">
                             <div class="text-center">
-                                <div class="fw-bold fs-4 text-primary">{{ candidate.final_score|floatformat:1 }}%</div>
-                                <small class="text-muted">Overall Match</small>
+                                <div class="ra-metric-value">{{ candidate.final_score|floatformat:1 }}%</div>
+                                <small class="text-muted fw-medium">Overall Match</small>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="ra-metric-box">
-                                    <div class="ra-metric-value">{{ candidate.skill_score|floatformat:0 }}%</div>
-                                    <div class="ra-metric-label">Skill Match</div>
+                    <div class="col-md-8">
+                        <div class="ra-metric-grid">
+                            <div class="ra-metric-card">
+                                <div class="ra-metric-icon">
+                                    <i class="fas fa-cogs"></i>
                                 </div>
+                                <div class="ra-metric-value">{{ candidate.skill_score|floatformat:0 }}%</div>
+                                <div class="ra-metric-label">Skill Match</div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="ra-metric-box">
-                                    <div class="ra-metric-value">{% if candidate.exp_score %}{{
-                                        candidate.exp_score|slice:":4" }}{% else %}N/A{% endif %}</div>
-                                    <div class="ra-metric-label">Experience</div>
+                            <div class="ra-metric-card">
+                                <div class="ra-metric-icon">
+                                    <i class="fas fa-briefcase"></i>
                                 </div>
+                                <div class="ra-metric-value">
+                                    {% if candidate.exp_score %}{{ candidate.exp_score}}{% else %}N/A{%endif %}
+                                </div>
+                                <div class="ra-metric-label">Experience</div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="ra-metric-box">
-                                    <div class="ra-metric-value">{% if candidate.title_score %}{{
-                                        candidate.title_score|floatformat:0 }}%{% else %}N/A{% endif %}</div>
-                                    <div class="ra-metric-label">Role Similarity</div>
+                            <div class="ra-metric-card">
+                                <div class="ra-metric-icon">
+                                    <i class="fas fa-user-tag"></i>
                                 </div>
+                                <div class="ra-metric-value">
+                                    {% if candidate.title_score %}{{ candidate.title_score|floatformat:0 }}%
+                                    {% else%}N/A{% endif %}
+                                </div>
+                                <div class="ra-metric-label">Role Similarity</div>
                             </div>
                         </div>
                     </div>
@@ -245,20 +504,161 @@
         </div>
     </div>
 
+    <!-- Candidate Profile Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="ra-card p-4 ra-fade-in">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <h3 class="ra-section-title">Candidate Profile</h3>
+                </div>
+
+                <div class="ra-info-grid">
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Full Name</h6>
+                            <p>{% if candidate.name %}{{ candidate.name }}{% else %}Not Available{% endif %}</p>
+                        </div>
+                    </div>
+
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Email Address</h6>
+                            <p>{% if candidate.email %}{{ candidate.email }}{% else %}Not Available{% endif %}</p>
+                        </div>
+                    </div>
+
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Mobile Number</h6>
+                            <p>{% if candidate.mobile_number %}{{ candidate.mobile_number }}{% else %}Not Available{%endif %}</p>
+                        </div>
+                    </div>
+
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Total Experience</h6>
+                            <p>{% if candidate.total_experience %}{{ candidate.total_experience }} years{% else %}Entry
+                                Level{% endif %}</p>
+                        </div>
+                    </div>
+
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Resume Pages</h6>
+                            <p>{% if candidate.no_of_pages %}{{ candidate.no_of_pages }} page{{
+                                candidate.no_of_pages|pluralize }}{% else %}1 page{% endif %}</p>
+                        </div>
+                    </div>
+
+                    <div class="ra-info-item">
+                        <div class="ra-info-icon">
+                            <i class="fas fa-hashtag"></i>
+                        </div>
+                        <div class="ra-info-content">
+                            <h6>Resume ID</h6>
+                            <p>{{ candidate.resume_id }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Education Section -->
+    {% if candidate.degree or candidate.college_name %}
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="ra-card p-4 ra-fade-in h-100">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4 class="ra-section-title">Education</h4>
+                </div>
+
+                {% if candidate.degree %}
+                {% for degree in candidate.degree %}
+                <div class="ra-education-item">
+                    <h6 class="mb-1 fw-bold">{{ degree }}</h6>
+                    {% if candidate.college_name %}
+                    <p class="mb-0 text-muted">{{ candidate.college_name }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-muted">Education details not available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Experience Section -->
+        <div class="col-md-6">
+            <div class="ra-card p-4 ra-fade-in h-100">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h4 class="ra-section-title">Professional Experience</h4>
+                </div>
+
+                {% if candidate.experience %}
+                <div class="ra-experience-timeline">
+                    {% for exp in candidate.experience %}
+                    <div class="ra-timeline-item">
+                        <div class="ra-timeline-content">
+                            <p class="mb-0 fw-medium">{{ exp }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Experience details not available</p>
+                {% endif %}
+
+                {% if candidate.designation %}
+                <div class="mt-3">
+                    <h6 class="mb-2">Current/Recent Designations:</h6>
+                    {% for designation in candidate.designation %}
+                    <span class="ra-skill-tag ra-skill-semantic me-2 mb-2">{{ designation }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Fitness Summary -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="ra-fitness-summary p-4 ra-fade-in">
-                <div class="row align-items-center">
-                    <div class="col-md-1">
-                        <div class="ra-icon-wrapper ra-icon-info mx-auto">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
+            <div class="ra-card p-4 ra-fade-in">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-chart-line"></i>
                     </div>
-                    <div class="col-md-11">
-                        <h5 class="mb-2">Candidate Fitness Assessment</h5>
-                        <p class="mb-0 fs-5">{{ candidate.fitness_summary }}</p>
-                    </div>
+                    <h4 class="ra-section-title">Candidate Fitness Assessment</h4>
+                </div>
+                <div class="alert alert-info border-0 bg-light">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <span class="fs-6">{{ candidate.fitness_summary }}</span>
                 </div>
             </div>
         </div>
@@ -267,59 +667,80 @@
     <!-- Skills Analysis -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="ra-score-card p-4 ra-fade-in">
-                <h3 class="ra-section-title">Skills Analysis</h3>
+            <div class="ra-card p-4 ra-fade-in">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="ra-section-title">Skills Analysis</h3>
+                </div>
 
-                <!-- Skills Breakdown -->
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="ra-metric-box">
-                            <div class="ra-icon-wrapper ra-icon-success mx-auto">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <div class="ra-metric-value">{{ candidate.skill_details.exact_matches|length }}</div>
-                            <div class="ra-metric-label">Perfect Matches</div>
+                <!-- Skills Breakdown Metrics -->
+                <div class="ra-metric-grid mb-4">
+                    <div class="ra-metric-card">
+                        <div class="ra-metric-icon" style="background: #dcfce7; color: #16a34a;">
+                            <i class="fas fa-bullseye"></i>
                         </div>
+                        <div class="ra-metric-value" style="color: #16a34a;">
+                            {{candidate.skill_details.exact_matches|length }}</div>
+                        <div class="ra-metric-label">Perfect Matches</div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="ra-metric-box">
-                            <div class="ra-icon-wrapper ra-icon-info mx-auto">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <div class="ra-metric-value">{{ candidate.skill_details.semantic_matches|length }}</div>
-                            <div class="ra-metric-label">Related Skills</div>
+                    <div class="ra-metric-card">
+                        <div class="ra-metric-icon" style="background: #dbeafe; color: #2563eb;">
+                            <i class="fas fa-search"></i>
                         </div>
+                        <div class="ra-metric-value" style="color: #2563eb;">{{candidate.skill_details.semantic_matches|length }}</div>
+                        <div class="ra-metric-label">Related Skills</div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="ra-metric-box">
-                            <div class="ra-icon-wrapper ra-icon-warning mx-auto">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="ra-metric-value">{{ candidate.missing_skills|length }}</div>
-                            <div class="ra-metric-label">Missing Skills</div>
+                    <div class="ra-metric-card">
+                        <div class="ra-metric-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="fas fa-exclamation-triangle"></i>
                         </div>
+                        <div class="ra-metric-value" style="color: #d97706;">{{ candidate.missing_skills|length }}</div>
+                        <div class="ra-metric-label">Missing Skills</div>
+                    </div>
+                    <div class="ra-metric-card">
+                        <div class="ra-metric-icon" style="background: #e0e7ff; color: #7c3aed;">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="ra-metric-value" style="color: #7c3aed;">{{ candidate.skills|length }}</div>
+                        <div class="ra-metric-label">Total Skills</div>
                     </div>
                 </div>
 
-                <!-- Skills Details -->
+                <!-- All Candidate Skills -->
+                <div class="mb-4">
+                    <h5 class="mb-3"><i class="fas fa-tools text-primary me-2"></i>Candidate Skills Portfolio</h5>
+                    <div class="ra-skill-container">
+                        {% for skill in candidate.skills %}
+                        <span class="ra-skill-tag ra-skill-exact">
+                            <i class="fas fa-code me-1"></i>{{ skill|title }}
+                        </span>
+                        {% empty %}
+                        <p class="text-muted">No skills data available</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Skills Matching Details -->
                 <div class="row">
                     <div class="col-md-6">
                         <h5 class="text-success mb-3"><i class="fas fa-check-circle me-2"></i>Matched Skills</h5>
 
                         {% if candidate.skill_details.exact_matches %}
                         <h6 class="text-success mb-2">🎯 Perfect Matches</h6>
-                        <div class="mb-3">
+                        <div class="ra-skill-container mb-3">
                             {% for skill in candidate.skill_details.exact_matches %}
-                            <span class="ra-skill-badge ra-skill-exact">{{ skill|title }}</span>
+                            <span class="ra-skill-tag ra-skill-exact">{{ skill|title }}</span>
                             {% endfor %}
                         </div>
                         {% endif %}
 
                         {% if candidate.skill_details.semantic_matches %}
                         <h6 class="text-info mb-2">🧠 Related Skills</h6>
-                        <div class="mb-3">
+                        <div class="ra-skill-container mb-3">
                             {% for skill in candidate.skill_details.semantic_matches %}
-                            <span class="ra-skill-badge ra-skill-semantic">{{ skill|title }}</span>
+                            <span class="ra-skill-tag ra-skill-semantic">{{ skill|title }}</span>
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -327,10 +748,10 @@
 
                     <div class="col-md-6">
                         {% if candidate.missing_skills %}
-                        <h5 class="text-warning mb-3"><i class="fas fa-times-circle me-2"></i>Missing Skills</h5>
-                        <div class="mb-3">
+                        <h5 class="text-warning mb-3"><i class="fas fa-times-circle me-2"></i>Development Areas</h5>
+                        <div class="ra-skill-container mb-3">
                             {% for skill in candidate.missing_skills %}
-                            <span class="ra-skill-badge ra-skill-missing">{{ skill|title }}</span>
+                            <span class="ra-skill-tag ra-skill-missing">{{ skill|title }}</span>
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -340,76 +761,250 @@
         </div>
     </div>
 
-    <!-- Why Good Fit -->
+    <!-- Why Good Fit & Recommendation -->
     <div class="row mb-5">
         <div class="col-md-6">
-            <div class="ra-score-card p-4 ra-fade-in h-100">
-                <h4 class="ra-section-title">Why This Candidate is a Good Fit</h4>
+            <div class="ra-card p-4 ra-fade-in h-100">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon" style="background: #dcfce7; color: #16a34a;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4 class="ra-section-title">Why This Candidate Fits</h4>
+                </div>
                 {% if candidate.why_good_fit %}
-                <ul class="list-unstyled">
-                    {% for reason in candidate.why_good_fit %}
-                    <li class="mb-3">
-                        <i class="fas fa-star text-warning me-3"></i>
+                {% for reason in candidate.why_good_fit %}
+                <div class="ra-list-item">
+                    <div class="ra-list-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
                         <strong>{{ reason }}</strong>
-                    </li>
-                    {% endfor %}
-                </ul>
+                    </div>
+                </div>
+                {% endfor %}
                 {% else %}
-                <p class="text-muted">No specific fit reasons available for this candidate.</p>
+                <div class="alert alert-light border">
+                    <i class="fas fa-info-circle me-2 text-muted"></i>
+                    <span class="text-muted">Detailed fit analysis will be generated based on comprehensive
+                        evaluation.</span>
+                </div>
                 {% endif %}
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="ra-recommendation-card p-4 ra-fade-in h-100">
-                <h4 class="ra-section-title">Recommendation</h4>
-                <div class="d-flex align-items-start">
-                    <i class="fas fa-lightbulb text-warning me-3 mt-1"></i>
+            <div class="ra-recommendation-card ra-fade-in h-100">
+                <div class="ra-section-header border-0 pb-2">
+                    <div class="ra-section-icon" style="background: #fef3c7; color: #d97706;">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h4 class="ra-section-title">Hiring Recommendation</h4>
+                </div>
+
+                <div class="d-flex align-items-start mb-3">
+                    <div class="ra-metric-icon me-3" style="background: 
+                        {% if candidate.final_score >= 70 %}#dcfce7; color: #16a34a;
+                        {% elif candidate.final_score >= 40 %}#fef3c7; color: #d97706;
+                        {% else %}#fee2e2; color: #dc2626;{% endif %}">
+                        <i
+                            class="fas fa-{% if candidate.final_score >= 70 %}thumbs-up{% elif candidate.final_score >= 40 %}balance-scale{% else %}thumbs-down{% endif %}"></i>
+                    </div>
                     <div>
-                        <p class="mb-2"><strong>Status:</strong>
+                        <h5 class="mb-2 fw-bold">
                             {% if candidate.final_score >= 70 %}
-                            Highly Recommended
+                            ✅ Highly Recommended
                             {% elif candidate.final_score >= 40 %}
-                            Consider with Training
+                            ⚖️ Consider with Training
                             {% else %}
-                            Needs Development
+                            ❌ Needs Development
                             {% endif %}
-                        </p>
+                        </h5>
                         <p class="mb-0">
                             {% if candidate.final_score >= 70 %}
-                            This candidate shows excellent alignment with the position requirements.
+                            This candidate demonstrates excellent alignment with position requirements and shows strong
+                            potential for immediate contribution.
                             {% elif candidate.final_score >= 40 %}
-                            This candidate shows potential but would benefit from training in missing skill areas.
+                            This candidate shows promise but would benefit from targeted training in key missing skill
+                            areas before full productivity.
                             {% else %}
-                            This candidate requires significant development to meet the position requirements.
+                            This candidate requires significant skill development and training to meet the position's
+                            core requirements effectively.
                             {% endif %}
                         </p>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <small class="text-muted d-block">Confidence Level</small>
+                            <strong class="text-primary">
+                                {% if candidate.final_score >= 70 %}High
+                                {% elif candidate.final_score >= 40 %}Medium
+                                {% else %}Low{% endif %}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-center p-2 bg-light rounded">
+                            <small class="text-muted d-block">Priority</small>
+                            <strong class="text-primary">
+                                {% if candidate.final_score >= 70 %}P1
+                                {% elif candidate.final_score >= 40 %}P2
+                                {% else %}P3{% endif %}
+                            </strong>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Candidate Details -->
+    <!-- Additional Candidate Details -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="ra-score-card p-4 ra-fade-in">
-                <h4 class="ra-section-title">Candidate Information</h4>
+            <div class="ra-card p-4 ra-fade-in">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h4 class="ra-section-title">Detailed Candidate Information</h4>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="ra-info-grid">
+                            <div class="ra-info-item">
+                                <div class="ra-info-icon">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="ra-info-content">
+                                    <h6>Company Names</h6>
+                                    <p>{% if candidate.company_names %}{{ candidate.company_names }}{% else %}Not
+                                        Available{% endif %}</p>
+                                </div>
+                            </div>
+
+                            <div class="ra-info-item">
+                                <div class="ra-info-icon">
+                                    <i class="fas fa-university"></i>
+                                </div>
+                                <div class="ra-info-content">
+                                    <h6>College/University</h6>
+                                    <p>{% if candidate.college_name %}{{ candidate.college_name }}{% else %}Not
+                                        Available{% endif %}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="ra-card p-3" style="background: #f8fafc;">
+                            <h6 class="mb-3 text-center">Quick Stats</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Skills Count:</span>
+                                <strong>{{ candidate.skills|length|default:0 }}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Education Records:</span>
+                                <strong>{% if candidate.degree %}{{ candidate.degree|length }}{% else %}0{% endif %}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Designations:</span>
+                                <strong>{% if candidate.designation %}{{ candidate.designation|length }}{% else %}0{% endif %}</strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Experience Items:</span>
+                                <strong>{% if candidate.experience %}{{ candidate.experience|length }}{% else %}0{% endif %}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Items & Next Steps -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="ra-card p-4 ra-fade-in">
+                <div class="ra-section-header">
+                    <div class="ra-section-icon" style="background: #e0e7ff; color: #7c3aed;">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h4 class="ra-section-title">Recommended Next Steps</h4>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>Resume ID:</strong> {{ candidate.resume_id }}</p>
-                        <p><strong>Name:</strong> {% if candidate.name %}{{ candidate.name }}{% else %}<span
-                                class="text-muted">Not Available</span>{% endif %}</p>
-                        <p><strong>Email:</strong> {% if candidate.email %}{{ candidate.email }}{% else %}<span
-                                class="text-muted">Not Available</span>{% endif %}</p>
+                        <h6 class="mb-3">📋 Immediate Actions</h6>
+                        <div class="ra-list-item">
+                            <div class="ra-list-icon" style="background: #3b82f6;">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <strong>Schedule Initial Screening Call</strong>
+                                <small class="d-block text-muted">Verify candidate interest and availability</small>
+                            </div>
+                        </div>
+
+                        {% if candidate.missing_skills %}
+                        <div class="ra-list-item">
+                            <div class="ra-list-icon" style="background: #f59e0b;">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div>
+                                <strong>Assess Missing Skills</strong>
+                                <small class="d-block text-muted">Evaluate {{ candidate.missing_skills|length }} missing
+                                    skill{{ candidate.missing_skills|length|pluralize }} during interview</small>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="ra-list-item">
+                            <div class="ra-list-icon" style="background: #8b5cf6;">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div>
+                                <strong>Technical Assessment</strong>
+                                <small class="d-block text-muted">Focus on 
+                                    {{candidate.skill_details.exact_matches|length }} matched skill
+                                    {{candidate.skill_details.exact_matches|length|pluralize }}</small>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="col-md-6">
-                        <p><strong>Total Experience:</strong> {% if candidate.total_experience %}{{
-                            candidate.total_experience }} years{% else %}<span class="text-muted">Not Available</span>{%endif %}</p>
-                        <p><strong>Current Designation:</strong> {% if candidate.designation %}{{ candidate.designation
-                            }}{% else %}<span class="text-muted">Not Available</span>{% endif %}</p>
-                        <p><strong>Company:</strong> {% if candidate.company_names %}{{ candidate.company_names }}{%
-                            else %}<span class="text-muted">Not Available</span>{% endif %}</p>
+                        <h6 class="mb-3">🎯 Interview Focus Areas</h6>
+
+                        {% if candidate.skill_details.exact_matches %}
+                        <div class="alert alert-success border-0 mb-3">
+                            <strong>✅ Strengths to Validate:</strong>
+                            <div class="mt-2">
+                                {% for skill in candidate.skill_details.exact_matches|slice:":5" %}
+                                <span class="badge bg-success me-1">{{ skill }}</span>
+                                {% endfor %}
+                                {% if candidate.skill_details.exact_matches|length > 5 %}
+                                <span class="text-muted">+{{ candidate.skill_details.exact_matches|length|add:"-5" }}
+                                    more</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if candidate.missing_skills %}
+                        <div class="alert alert-warning border-0">
+                            <strong>⚠️ Areas to Explore:</strong>
+                            <div class="mt-2">
+                                {% for skill in candidate.missing_skills|slice:":5" %}
+                                <span class="badge bg-warning text-dark me-1">{{ skill }}</span>
+                                {% endfor %}
+                                {% if candidate.missing_skills|length > 5 %}
+                                <span class="text-muted">+{{ candidate.missing_skills|length|add:"-5" }} more</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -417,37 +1012,172 @@
     </div>
 </div>
 {%endblock%}
+
 {%block script%}
 <script>
-    // Add smooth animations on scroll
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+    // Enhanced animations and interactions
+    document.addEventListener('DOMContentLoaded', function () {
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100); // Stagger animations
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.ra-fade-in').forEach(el => {
+            observer.observe(el);
         });
-    }, observerOptions);
 
-    // Observe all fade-in elements
-    document.querySelectorAll('.ra-fade-in').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
+        // Animate progress circle
+        setTimeout(() => {
+            const progressCircle = document.querySelector('.ra-score-display');
+            if (progressCircle) {
+                progressCircle.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    progressCircle.style.transform = 'scale(1)';
+                }, 300);
+            }
+        }, 800);
+
+        // Add hover effects to metric cards
+        document.querySelectorAll('.ra-metric-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-4px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add click effects to skill tags
+        document.querySelectorAll('.ra-skill-tag').forEach(tag => {
+            tag.addEventListener('click', function () {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+        });
+
+        // Smooth scroll behavior for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation to cards
+        const cards = document.querySelectorAll('.ra-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Counter animation for metric values
+        function animateCounters() {
+            const counters = document.querySelectorAll('.ra-metric-value');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                if (!isNaN(target)) {
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            counter.textContent = target + (counter.textContent.includes('%') ? '%' : '');
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.floor(current) + (counter.textContent.includes('%') ? '%' : '');
+                        }
+                    }, 30);
+                }
+            });
+        }
+
+        // Trigger counter animation when visible
+        const metricsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    metricsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const metricsSection = document.querySelector('.ra-metric-grid');
+        if (metricsSection) {
+            metricsObserver.observe(metricsSection);
+        }
+
+        // Add ripple effect to clickable elements
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Apply ripple effect to interactive elements
+        document.querySelectorAll('.ra-skill-tag, .ra-metric-card').forEach(el => {
+            el.addEventListener('click', createRipple);
+        });
     });
 
-    // Animate progress circle
-    setTimeout(() => {
-        document.querySelector('.ra-progress-circle').style.transform = 'scale(1.05)';
-        setTimeout(() => {
-            document.querySelector('.ra-progress-circle').style.transform = 'scale(1)';
-        }, 200);
-    }, 500);
+    // Add CSS for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .ra-skill-tag, .ra-metric-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 {%endblock%}
