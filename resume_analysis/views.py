@@ -55,6 +55,3 @@ def rank_resumes_for_job(request, job_id, resume_uuid):
         'candidate': candidate,  # Single candidate instead of results array
     }
     return render(request, 'resume_analysis.html', context)
-    
-    
-    
