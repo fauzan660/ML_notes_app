@@ -3,22 +3,15 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import csv
 from pathlib import Path
 from rapidfuzz import fuzz
-from sentence_transformers import SentenceTransformer, util
-import os
 
-# Absolute path to your project root
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Path to the locally downloaded model
-MODEL_PATH = os.path.join(BASE_DIR, 'my_local_model')
 
-# Load model once at global scope
-model = SentenceTransformer(MODEL_PATH)
 # -------------------- SkillMatcher Class --------------------
 class SkillMatcher:
     def __init__(self, synonyms_csv_path: str):
+        from sentence_transformers import SentenceTransformer
         self.synonym_map = self._load_synonyms(synonyms_csv_path)
-        self.model = model
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
     def _load_synonyms(self, path):
         synonym_map = {}
@@ -42,6 +35,7 @@ class SkillMatcher:
         return False
 
     def semantic_match(self, resume_skills, job_skill):
+        from sentence_transformers import util
         emb_job = self.model.encode(job_skill, convert_to_tensor=True)
         emb_resume = self.model.encode(resume_skills, convert_to_tensor=True)
         cosine_scores = util.pytorch_cos_sim(emb_resume, emb_job)
