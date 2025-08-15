@@ -12,10 +12,14 @@
      background-color: #fff;
  }
 
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #000;
+}
  .navbar-brand {
      font-weight: 600;
      font-size: 1.2rem;
-        color: #54616c;
+    color: #54616c;
  }
  .navbar-brand span{
 

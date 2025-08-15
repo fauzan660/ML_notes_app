@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from pyresparser import ResumeParser
 import subprocess
 import json
+from resume_analysis.utils import rank_resume
 # Create your views here.
 # def members(request):
 #     template = loader.get_template('notes/resume.html')
@@ -115,7 +116,10 @@ def resume_details(request, id):
                     print("STDERR:", e.stderr)
 
 
-                score = score_calculator(job_instance.job_description, read_pdf(each))
+                returned_score = rank_resume(instance, job_instance)
+                print(returned_score)
+                score = returned_score['final_score'] / 25
+                score = round(score, 2)
                 # get_ner_from_39_env(each)
                 rank_dict.setdefault(f"{each.name}", []).append(score)
                 rank_dict[f'{each.name}'].append(str(instance.uuid))

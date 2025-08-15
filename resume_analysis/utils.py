@@ -5,6 +5,24 @@ from pathlib import Path
 from rapidfuzz import fuzz
 
 
+# -------------------- CONFIGURATION --------------------
+WEIGHTS = {
+    "skills": 0.5,       # % weight of skill match
+    "experience": 0.3,   # % weight of experience fit
+    "title": 0.2         # % weight of job title match
+}
+
+# Skill match scoring
+SKILL_POINTS = {
+    "exact": 2,
+    "fuzzy": 1.5,
+    "semantic_strong": 1,
+    "semantic_weak": 0.5
+}
+
+SEMANTIC_STRONG_THRESHOLD = 0.35
+SEMANTIC_WEAK_THRESHOLD = 0.25
+
 
 # -------------------- SkillMatcher Class --------------------
 class SkillMatcher:
@@ -28,18 +46,15 @@ class SkillMatcher:
     def normalize_list(self, skills):
         return list({self.normalize(skill) for skill in skills})
 
-    def fuzzy_match(self, resume_skills, job_skill):
-        for rs in resume_skills:
-            if fuzz.ratio(rs, job_skill) >= 85:
-                return True
-        return False
+    def fuzzy_match_score(self, rs, js):
+        return fuzz.ratio(rs, js)
 
-    def semantic_match(self, resume_skills, job_skill):
+    def semantic_match_score(self, rs, js):
         from sentence_transformers import util
-        emb_job = self.model.encode(job_skill, convert_to_tensor=True)
-        emb_resume = self.model.encode(resume_skills, convert_to_tensor=True)
+        emb_job = self.model.encode(js, convert_to_tensor=True)
+        emb_resume = self.model.encode(rs, convert_to_tensor=True)
         cosine_scores = util.pytorch_cos_sim(emb_resume, emb_job)
-        return cosine_scores.max().item() > 0.35
+        return cosine_scores.max().item()
 
     def rank_resume(self, resume_skills, job_skills):
         resume_skills = self.normalize_list(resume_skills)
@@ -48,26 +63,39 @@ class SkillMatcher:
         matched_exact = set(resume_skills) & set(job_skills)
         unmatched_job_skills = set(job_skills) - matched_exact
 
-        score = len(matched_exact) * 2
+        score = len(matched_exact) * SKILL_POINTS["exact"]
         matched_fuzzy = set()
-        matched_semantic = set()
+        matched_semantic_strong = set()
+        matched_semantic_weak = set()
 
         for js in unmatched_job_skills:
-            if self.fuzzy_match(resume_skills, js):
+            # Check fuzzy
+            if any(self.fuzzy_match_score(rs, js) >= 85 for rs in resume_skills):
                 matched_fuzzy.add(js)
-                score += 1
-            elif self.semantic_match(resume_skills, js):
-                matched_semantic.add(js)
-                score += 0.5
+                score += SKILL_POINTS["fuzzy"]
+                continue
 
-        total_possible = len(job_skills) * 2
+            # Check semantic
+            sem_score = self.semantic_match_score(resume_skills, js)
+            if sem_score >= SEMANTIC_STRONG_THRESHOLD:
+                matched_semantic_strong.add(js)
+                score += SKILL_POINTS["semantic_strong"]
+            elif sem_score >= SEMANTIC_WEAK_THRESHOLD:
+                matched_semantic_weak.add(js)
+                score += SKILL_POINTS["semantic_weak"]
+
+        total_possible = len(job_skills) * SKILL_POINTS["exact"]
         final_score = (score / total_possible) * 100 if total_possible else 0
+
+        # Minimum boost if there are matches but score is too low
+        if final_score < 40 and (matched_exact or matched_fuzzy or matched_semantic_strong):
+            final_score = max(final_score, 40)
 
         return {
             "exact_matches": list(matched_exact),
             "fuzzy_matches": list(matched_fuzzy),
-            "semantic_matches": list(matched_semantic),
-            "missing_skills": list(unmatched_job_skills - matched_fuzzy - matched_semantic),
+            "semantic_matches": list(matched_semantic_strong | matched_semantic_weak),
+            "missing_skills": list(unmatched_job_skills - matched_fuzzy - matched_semantic_strong - matched_semantic_weak),
             "score_percent": round(final_score, 2)
         }
 
@@ -85,7 +113,6 @@ def generate_skill_match_summary(skill_result):
     semantic = skill_result["semantic_matches"]
 
     summary_parts = []
-
     if exact:
         summary_parts.append(f"🎯 Perfect matches: {', '.join(exact)}")
     if fuzzy:
@@ -107,7 +134,6 @@ def compute_skill_match_new(resume_skills, job_skills):
         }, job_skills
 
     result = skill_matcher.rank_resume(resume_skills, job_skills)
-
     all_matched = result["exact_matches"] + result["fuzzy_matches"] + result["semantic_matches"]
 
     detailed_info = {
@@ -121,33 +147,49 @@ def compute_skill_match_new(resume_skills, job_skills):
     return result["score_percent"], detailed_info, result["missing_skills"]
 
 
+# -------------------- Experience Fit (Soft Scoring) --------------------
 def calculate_experience_fit(job, resume):
-    if resume.total_experience is None:
-        return None
-    if job.min_experience is None and job.max_experience is None:
+    if resume.total_experience is None or (job.min_experience is None and job.max_experience is None):
         return None
 
     exp = resume.total_experience
     min_exp = job.min_experience or 0
-    max_exp = job.max_experience or 100
+    max_exp = job.max_experience or exp  # if no max, assume current exp is max
 
     if min_exp <= exp <= max_exp:
-        return "Perfect Fit"
+        return 100  # perfect fit
     elif exp < min_exp:
-        return "Underqualified"
+        gap = min_exp - exp
     else:
-        return "Overqualified"
+        gap = exp - max_exp
+
+    # Reduce score 10% for each year gap, not below 0
+    return max(0, 100 - (gap * 10))
 
 
-def calculate_designation_similarity(job_title, resume_designation):
-    if not job_title or not resume_designation:
+# -------------------- Title Similarity (Hybrid) --------------------
+def calculate_designation_similarity(job_title, resume_designations):
+    if not job_title or not resume_designations:
         return None
-    vectorizer = TfidfVectorizer()
-    tfidf_matrix = vectorizer.fit_transform([job_title.lower(), resume_designation.lower()])
-    similarity = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0]
-    return round(similarity * 100, 2)
+    if isinstance(resume_designations, str):
+        resume_designations = [resume_designations]
+
+    best_score = 0
+    for designation in resume_designations:
+        # TF-IDF score
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform([job_title.lower(), designation.lower()])
+        tfidf_score = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0] * 100
+
+        # Fuzzy score
+        fuzzy_score = fuzz.token_set_ratio(job_title, designation)
+
+        best_score = max(best_score, tfidf_score, fuzzy_score)
+
+    return round(best_score, 2)
 
 
+# -------------------- Fitness Summary --------------------
 def generate_candidate_fitness_summary(skill_info, exp_score, title_score, skill_score):
     summary_parts = []
 
@@ -160,17 +202,19 @@ def generate_candidate_fitness_summary(skill_info, exp_score, title_score, skill
     else:
         summary_parts.append("📚 Developing skill set")
 
-    if exp_score == "Perfect Fit":
-        summary_parts.append("🎯 Ideal experience level")
-    elif exp_score == "Overqualified":
-        summary_parts.append("🚀 Senior-level expertise")
-    elif exp_score == "Underqualified":
-        summary_parts.append("🌱 Growing professional")
+    if exp_score is not None:
+        if exp_score >= 90:
+            summary_parts.append("🎯 Ideal experience level")
+        elif exp_score >= 60:
+            summary_parts.append("🚀 Strong experience")
+        elif exp_score >= 40:
+            summary_parts.append("🌱 Growing professional")
 
-    if title_score and title_score >= 70:
-        summary_parts.append("🔄 Relevant role background")
-    elif title_score and title_score >= 40:
-        summary_parts.append("🔀 Transferable experience")
+    if title_score:
+        if title_score >= 70:
+            summary_parts.append("🔄 Relevant role background")
+        elif title_score >= 40:
+            summary_parts.append("🔀 Transferable experience")
 
     return " • ".join(summary_parts)
 
@@ -185,17 +229,19 @@ def generate_good_fit_reasons(skill_info, exp_score, title_score):
     if skill_info["semantic_matches"]:
         reasons.append(f"Shows {len(skill_info['semantic_matches'])} complementary technical abilities")
 
-    if exp_score == "Perfect Fit":
-        reasons.append("Experience level perfectly matches job requirements")
-    elif exp_score == "Overqualified":
-        reasons.append("Brings senior-level expertise that could mentor others")
-    elif exp_score == "Underqualified":
-        reasons.append("Eager candidate with growth potential")
+    if exp_score is not None:
+        if exp_score >= 90:
+            reasons.append("Experience level perfectly matches job requirements")
+        elif exp_score >= 60:
+            reasons.append("Brings strong professional experience")
+        elif exp_score >= 40:
+            reasons.append("Eager candidate with growth potential")
 
-    if title_score and title_score >= 70:
-        reasons.append("Previous role closely aligns with this position")
-    elif title_score and title_score >= 40:
-        reasons.append("Background shows relevant transferable experience")
+    if title_score:
+        if title_score >= 70:
+            reasons.append("Previous role closely aligns with this position")
+        elif title_score >= 40:
+            reasons.append("Background shows relevant transferable experience")
 
     return reasons[:4]
 
@@ -209,32 +255,22 @@ def rank_resume(resume, job):
     exp_score = calculate_experience_fit(job, resume)
     title_score = calculate_designation_similarity(job.job_title, resume.designation)
 
-    exp_val = 100 if exp_score == "Perfect Fit" else 50 if exp_score in ["Overqualified", "Underqualified"] else 0
+    exp_val = exp_score or 0
     title_val = title_score or 0
 
-    final_score = round((score_skills * 0.5) + (exp_val * 0.3) + (title_val * 0.2), 2)
+    final_score = round(
+        (score_skills * WEIGHTS["skills"]) +
+        (exp_val * WEIGHTS["experience"]) +
+        (title_val * WEIGHTS["title"]),
+        2
+    )
+
+    # Apply small boost if there are strong skill matches but final score is too low
+    if score_skills >= 60 and final_score < 50:
+        final_score = max(final_score, 50)
 
     fitness_summary = generate_candidate_fitness_summary(detailed_skill_info, exp_score, title_score, score_skills)
-    print({
-        "resume_id": resume.id,
-        "name": resume.name,
-        "email": resume.email,
-        "skills": resume.extracted_resume_skills,
-        "final_score": final_score,
-        "skill_score": score_skills,
-        "matched_skills": detailed_skill_info["total_matched"],
-        "missing_skills": missing_skills,
-        "exp_score": exp_score,
-        "title_score": title_score,
-        "total_experience": resume.total_experience,
-        "designation": resume.designation,
-        "company_names": resume.company_names,
-        "college_name": resume.college_name,
-        "skill_details": detailed_skill_info,
-        "fitness_summary": fitness_summary,
-        "why_good_fit": generate_good_fit_reasons(detailed_skill_info, exp_score, title_score)
-    }
-)
+
     return {
         "resume_id": resume.id,
         "name": resume.name,
@@ -254,17 +290,3 @@ def rank_resume(resume, job):
         "fitness_summary": fitness_summary,
         "why_good_fit": generate_good_fit_reasons(detailed_skill_info, exp_score, title_score)
     }
-
-
-# -------------------- Optional: Access raw match data --------------------
-def get_detailed_skill_match(resume_skills, job_skills):
-    if not resume_skills or not job_skills:
-        return {
-            "exact_matches": [],
-            "fuzzy_matches": [],
-            "semantic_matches": [],
-            "missing_skills": job_skills,
-            "score_percent": 0
-        }
-
-    return skill_matcher.rank_resume(resume_skills, job_skills)

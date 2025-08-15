@@ -142,6 +142,10 @@
         gap: 1rem;
         min-width: 280px;
     }
+    .right-header {
+        display: flex;
+        flex-direction: column;
+    }
 
     .stat-card {
         background: var(--background);
@@ -293,15 +297,15 @@
     }
 
     .skills-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem;
-    }
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Exactly 3 per row */
+    gap: 1rem;
+}
 
     .skill-item {
         background: var(--background);
         color: var(--text-primary);
-        padding: 1rem 1.25rem;
+        padding: 0.5rem 0.5rem;
         border-radius: var(--radius-md);
         font-size: 0.875rem;
         font-weight: 600;
@@ -1152,18 +1156,46 @@
             </div>
             <p class="job-description">{{ job.job_description }}</p>
         </div>
-        <div class="header-stats">
-            <div class="stat-card scale-in">
-                <div class="stat-number">{% if job.extracted_skills %}{{ job.extracted_skills|length }}{% else %}0{% endif %}</div>
-                <div class="stat-label">Required Skills</div>
+        <div class="right-header">
+            <div class="header-stats">
+                <div class="stat-card scale-in">
+                    <div class="stat-number">{% if job.extracted_skills %}{{ job.extracted_skills|length }}{% else %}0{% endif %}
+                    </div>
+                    <div class="stat-label">Required Skills</div>
+                </div>
+                {% if score %}
+                <div class="stat-card scale-in">
+                    <div class="stat-number">{{ score|length }}</div>
+                    <div class="stat-label">Analyzed Resumes</div>
+                </div>
+                {% endif %}
             </div>
-            {% if score %}
-            <div class="stat-card scale-in">
-                <div class="stat-number">{{ score|length }}</div>
-                <div class="stat-label">Analyzed Resumes</div>
+            <!-- Required Skills Section - Reference for Users -->
+            {% if job.extracted_skills %}
+            <div class="section-card fade-in">
+                <div class="section-body">
+                    <div class="skills-container">
+                        <div class="skills-header">
+                            <div class="skills-meta">
+                                <div class="skills-subtitle">
+                                    <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
+                                    Technical Requirements
+                                </div>
+                                <div class="skills-count">{{ job.extracted_skills|length }} skills</div>
+                            </div>
+                        </div>
+                        <div class="skills-grid">
+                            {% for skill in job.extracted_skills %}
+                            <div class="skill-item slide-in-left">{{ skill }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
             {% endif %}
+
         </div>
+        
     </div>
 </div>
 
@@ -1241,49 +1273,8 @@
                 </form>
 
                 <!-- Empty State for No Results -->
-                {% if not score %}
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3 class="empty-title">Ready for Analysis</h3>
-                    <p class="empty-description">Upload candidate resumes to get AI-powered matching insights and detailed compatibility scores</p>
-                </div>
-                {% endif %}
             </div>
         </div>
-
-        <!-- Required Skills Section - Reference for Users -->
-        {% if job.extracted_skills %}
-        <div class="section-card fade-in">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <div class="section-icon">
-                        <i class="fas fa-brain"></i>
-                    </div>
-                    Required Skills
-                </h2>
-            </div>
-            <div class="section-body">
-                <div class="skills-container">
-                    <div class="skills-header">
-                        <div class="skills-meta">
-                            <div class="skills-subtitle">
-                                <i class="fas fa-lightbulb" style="color: var(--warning-color);"></i>
-                                Technical Requirements
-                            </div>
-                            <div class="skills-count">{{ job.extracted_skills|length }} skills</div>
-                        </div>
-                    </div>
-                    <div class="skills-grid">
-                        {% for skill in job.extracted_skills %}
-                        <div class="skill-item slide-in-left">{{ skill }}</div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 
     <!-- Right Column - Analysis Results -->

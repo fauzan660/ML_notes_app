@@ -1,0 +1,49 @@
+.form-wrapper {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    max-width: 700px;
+    margin: auto;
+}
+
+.job_h2 {
+    color: #6f42c1;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control,
+.form-select {
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.2);
+}
+
+.btn-primary {
+    background-color: #6f42c1;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #5a35a0;
+}
+
+.text-danger {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}

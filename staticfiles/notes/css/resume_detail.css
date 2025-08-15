@@ -1,0 +1,115 @@
+/* General Styles */
+body {
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Product Detail Card */
+.product-detail-card {
+    border-radius: 15px;
+    background-color: #fff;
+    padding: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Card Header */
+.product-detail-card .card-header {
+    border-bottom: 2px solid #6a0dad;
+    margin-bottom: 20px;
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #6a0dad;
+}
+
+.product-description {
+    font-size: 1.1rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.product-type {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Form Section */
+.upload-form {
+    margin-top: 20px;
+}
+
+.upload-form .form-label {
+    font-weight: 500;
+    color: #6a0dad;
+}
+
+.upload-form .form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.upload-form .form-text {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+/* Button Styles */
+.btn-purple {
+    background-color: #6a0dad;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 0;
+    transition: background-color 0.3s;
+}
+
+.btn-purple:hover {
+    background-color: #5c00a0;
+}
+
+/* Score Section */
+.score-section {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.score-title {
+    font-size: 1.2rem;
+    color: #6a0dad;
+}
+
+.stars {
+    margin-top: 5px;
+    color: #ffb700;
+    font-size: 1.2rem;
+}
+
+.star {
+    margin-right: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-detail-card {
+        padding: 20px;
+    }
+
+    .product-title {
+        font-size: 1.5rem;
+    }
+
+    .product-description {
+        font-size: 1rem;
+    }
+
+    .product-type {
+        font-size: 0.8rem;
+    }
+}
