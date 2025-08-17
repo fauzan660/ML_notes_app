@@ -162,3 +162,7 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 LOGIN_URL = '/accounts/google/login/'  # Default login URL
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# ALLOWED_HOSTS = ["*"]  # or your Render URL
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+# MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")

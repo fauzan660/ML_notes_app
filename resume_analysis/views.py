@@ -8,7 +8,7 @@ import os
 from .skill_compare import pred
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseForbidden
-from .utils import rank_resume
+from .utils import rank_resume_enhanced
 # Create your views here.
 
 def absolute_to_media_url(full_path):
@@ -47,9 +47,10 @@ def rank_resumes_for_job(request, job_id, resume_uuid):
     resume = UploadedFiles.objects.get(user = request.user, uuid=resume_uuid) # ✅ 1 authentication url safety
     if resume.user != request.user:
         return HttpResponseForbidden("You are not allowed to view this resume.") # ✅ 2 authentication url safety
-    candidate = rank_resume(resume, job)  # Single candidate analysis
+    candidate = rank_resume_enhanced(resume, job)  # Single candidate analysis
     
     context = {
+        'job_company': getattr(job, 'company_name', None),
         'job_id': job_id,
         'job_title': job.job_title,
         'candidate': candidate,  # Single candidate instead of results array

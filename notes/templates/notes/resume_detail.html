@@ -754,7 +754,7 @@
 
     .score-stars {
         color: var(--warning-color);
-        font-size: 1.25rem;
+        font-size: 0.9rem;
         display: flex;
         gap: 0.125rem;
     }
@@ -1309,7 +1309,7 @@
                             <div class="score-display">
                                 <div class="score-stars">
                                     {% for i in "12345" %}
-                                        {% if forloop.counter <= value.0 %}⭐{% else %}☆{% endif %}
+                                        {% if forloop.counter <= value.0|add:"1" %}⭐{% else %}☆{% endif %}
                                     {% endfor %}
                                 </div>
                                 <span class="score-text">{{ value.0 }}/5</span>
@@ -1552,7 +1552,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { percent: 55, text: 'Analyzing skills...' },
             { percent: 75, text: 'Matching candidates...' },
             { percent: 90, text: 'Generating insights...' },
-            { percent: 100, text: 'Complete!' }
+            { percent: 100, text: 'Hang tight its almost complete!' }
         ];
         
         let currentStep = 0;
@@ -1566,7 +1566,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 clearInterval(interval);
             }
-        }, 800);
+        }, 8000);
     }
 
     // Notifications
