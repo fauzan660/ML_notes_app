@@ -10,6 +10,13 @@ from django.shortcuts import render
 import json
 from .job_gen import generate_description
 from django.http import JsonResponse
+from django.conf import settings
+
+BASE_DIR = settings.BASE_DIR
+
+
+INDUSTRIES_CSV_PATH = f"{BASE_DIR}/job/csv_files/Industries.csv"
+CITIES_BY_COUNTRY = f"{BASE_DIR}/job/json_dataset/cities_by_country.json"
 
 @login_required
 def upload_job(request):
@@ -52,7 +59,7 @@ def upload_job(request):
 # LIST OF INDUSTRIES
         industries = []
 
-        with open(r'C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\Resume\job\csv_files\Industries.csv', newline='', encoding='utf-8') as csvfile:
+        with open(INDUSTRIES_CSV_PATH, newline='', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             next(reader)  # Skip header row
             for row in reader:
@@ -61,7 +68,7 @@ def upload_job(request):
 
 # LIST OF COUNTRIES AND CITIES
            # Load cities and countries from JSON
-        with open(r'C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\Resume\job\json_dataset\cities_by_country.json', encoding='utf-8') as f:
+        with open(CITIES_BY_COUNTRY, encoding='utf-8') as f:
             cities_by_country = json.load(f)
 
         countries = sorted(list(cities_by_country.keys()))

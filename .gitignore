@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 *.pdf
 *staticfiles/
+.*
+media/
+venv_3.10/
+*.sqlite3

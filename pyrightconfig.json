@@ -1,0 +1,12 @@
+{
+  "venvPath": ".",
+  "venv": "venv_3.10",
+  "exclude": ["venv_3.10"],
+  "typeCheckingMode": "basic",
+  "reportMissingTypeStubs": false,
+  "reportUnknownVariableType": "none",
+  "reportUnknownMemberType": "none",
+  "reportUnknownArgumentType": "none",
+  "reportUnknownParameterType": "none",
+  "reportMissingModuleSource": "none"
+}
