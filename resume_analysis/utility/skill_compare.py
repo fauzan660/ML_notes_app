@@ -1,6 +1,9 @@
 import csv
 from pathlib import Path
 from rapidfuzz import fuzz
+from django.conf import settings
+
+BASE_DIR = settings.BASE_DIR
 
 
 class SkillMatcher:
@@ -70,7 +73,7 @@ class SkillMatcher:
 
 def pred(resume_skills, job_skills):
 
-    matcher = SkillMatcher(synonyms_csv_path=r"C:\Users\fauza\OneDrive\Desktop\Resume Folder\backend\Resume\resume_analysis\csv_files\skills_synonyms.csv")
+    matcher = SkillMatcher(synonyms_csv_path=f"{BASE_DIR}/resume_analysis/data/skills_synonyms.csv")
 
 
     result = matcher.rank_resume(resume_skills, job_skills)

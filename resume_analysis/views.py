@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from .spacy_resume.spacy_ner import spacy_ner
 from notes.models import UploadedFiles
-from .pdf_highlight.skill_highlight import pdf_highlight
+from .utility.pdf_highlight.skill_highlight import pdf_highlight
 from django.conf import settings
 from job.models import PostJobModel
 import os
-from .skill_compare import pred
+from .utility.skill_compare import pred
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponseForbidden
 from .utils import rank_resume_enhanced

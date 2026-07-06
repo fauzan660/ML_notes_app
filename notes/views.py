@@ -8,27 +8,24 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from pyresparser import ResumeParser
-
 from job.models import PostJobModel
-from resume_analysis.spacy_resume.spacy_ner import spacy_ner
+from resume_analysis.utility.spacy_resume.spacy_ner import spacy_ner
 from resume_analysis.utils import rank_resume_enhanced
 
 from .forms import UploadFileForm
 from .models import UploadedFiles
-from .resume_parsing import get_ner_from_39_env
-from .score_calculator import score_calculator
-from .transformer import transformer_similarity
-from .utils import read_pdf
 
+from .utility.transformer import transformer_similarity
+from .utils import read_pdf
+# from .resume_parsing import get_ner_from_39_env
 # Create your views here.
 # def members(request):
 #     template = loader.get_template('notes/resume.html')
 #     return HttpResponse(template.render())
 
 BASE_DIR = settings.BASE_DIR
-PYRES_FUNCTION = f"{BASE_DIR}/notes/pyres_skill.py"
-PYRES_VENV = f"{BASE_DIR.parent}/venv_3.8/bin/python"
+PYRES_FUNCTION = BASE_DIR / 'notes' / 'utility' /'pyres_skill.py'
+PYRES_VENV = BASE_DIR.parent / "venv_3.8" /"bin"/"python"
 
 
 # HELPER FUNCTION
@@ -55,44 +52,45 @@ def upload_file(request):
     )
 
 
-@csrf_exempt
+# @csrf_exempt
 def transformer_test(request, id):
-    if request.method == "POST":
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = form.cleaned_data["resume_file"]
-            print(files)
-            rank_dict = {}
-            job_instance = PostJobModel.objects.get(pk=id)
-            for each in files:
-                job_instance = PostJobModel.objects.get(pk=id)
-                instance = UploadedFiles(
-                    user=request.user,
-                    job=job_instance,
-                    file_field=each,
-                    extracted_text=read_pdf(each),
-                )
-                instance.save()
-                score = transformer_similarity(
-                    read_pdf(each), job_instance.job_description
-                )
-                get_ner_from_39_env(files[0])
-                rank_dict[f"{each.name}"] = score
-                time.sleep(2)
+    pass
+#     if request.method == "POST":
+#         form = UploadFileForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             files = form.cleaned_data["resume_file"]
+#             print(files)
+#             rank_dict = {}
+#             job_instance = PostJobModel.objects.get(pk=id)
+#             for each in files:
+#                 job_instance = PostJobModel.objects.get(pk=id)
+#                 instance = UploadedFiles(
+#                     user=request.user,
+#                     job=job_instance,
+#                     file_field=each,
+#                     extracted_text=read_pdf(each),
+#                 )
+#                 instance.save()
+#                 score = transformer_similarity(
+#                     read_pdf(each), job_instance.job_description
+#                 )
+#                 get_ner_from_39_env(files[0])
+#                 rank_dict[f"{each.name}"] = score
+#                 time.sleep(2)
 
-            sorted_score = dict(
-                sorted(rank_dict.items(), key=lambda item: item[1], reverse=True)
-            )
-            return render(
-                request,
-                "notes/resume_detail.html",
-                {
-                    "job": job_instance,
-                    "form": form,
-                    loader: False,
-                    "score": sorted_score,
-                },
-            )
+#             sorted_score = dict(
+#                 sorted(rank_dict.items(), key=lambda item: item[1], reverse=True)
+#             )
+#             return render(
+#                 request,
+#                 "notes/resume_detail.html",
+#                 {
+#                     "job": job_instance,
+#                     "form": form,
+#                     "loader": False,
+#                     "score": sorted_score,
+#                 },
+#             )
 
 
 def resume_details(request, id):
@@ -177,7 +175,7 @@ def resume_details(request, id):
                 {
                     "job": job_instance,
                     "form": form,
-                    loader: False,
+                    "loader": False,
                     "score": sorted_score,
                 },
             )

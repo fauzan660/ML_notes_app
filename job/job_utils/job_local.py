@@ -1,10 +1,19 @@
-import requests
 import json
 
 import requests
-import json
 
-def generate_description_stream(job_title, job_type, work_mode, industry, experience_level, min_experience, max_experience, country, city):
+
+def generate_description_stream(
+    job_title,
+    job_type,
+    work_mode,
+    industry,
+    experience_level,
+    min_experience,
+    max_experience,
+    country,
+    city,
+):
     user_prompt = f"""
     Job Title: {job_title}
     Job Type: {job_type}
@@ -19,7 +28,7 @@ def generate_description_stream(job_title, job_type, work_mode, industry, experi
     response = requests.post(
         "http://localhost:11434/api/chat",
         json={
-            "model": "recruiter-assistant",   # your custom model here
+            "model": "recruiter-assistant",  # your custom model here
             "messages": [{"role": "user", "content": user_prompt}],
             "stream": True,
         },
@@ -32,24 +41,23 @@ def generate_description_stream(job_title, job_type, work_mode, industry, experi
     for line in response.iter_lines():
         if line:
             data = json.loads(line)
-            content = data.get('message', {}).get('content')
+            content = data.get("message", {}).get("content")
             if content:
                 for char in content:
-                    if char == '{':
+                    if char == "{":
                         capturing = True
                         bracket_count = 1
-                        print(char, end='', flush=True)
+                        print(char, end="", flush=True)
                         continue
                     if capturing:
-                        print(char, end='', flush=True)
-                        if char == '{':
+                        print(char, end="", flush=True)
+                        if char == "{":
                             bracket_count += 1
-                        elif char == '}':
+                        elif char == "}":
                             bracket_count -= 1
                             if bracket_count == 0:
                                 print()  # Ensure newline after JSON
                                 return  # Stop after closing bracket
-
 
 
 # Example usage:
@@ -62,5 +70,5 @@ generate_description_stream(
     min_experience="3",
     max_experience="5",
     country="USA",
-    city="New York"
+    city="New York",
 )
